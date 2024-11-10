@@ -1,0 +1,7 @@
+.backgroundColor1{
+    -fx-background-color: linear-gradient(from 40% 0% to 100% 0%, #0D1117, #1d2b44);
+}
+
+.backgroundColor2{
+    -fx-background-color: linear-gradient(from 10% 0% to 70% 0%, #1d2b44, #0D1117);
+}
