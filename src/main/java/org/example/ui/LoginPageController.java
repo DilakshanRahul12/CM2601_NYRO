@@ -7,13 +7,14 @@ import java.sql.*;
 
 public class LoginPageController {
     @FXML
+    public Button signUpSwicth;
+    @FXML
     private PasswordField signInPass;
     @FXML
     private TextField signInEmail;
     @FXML
     private Button signIn;
-    @FXML
-    private Button signUpSwitch;
+
 
 
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/Users";
