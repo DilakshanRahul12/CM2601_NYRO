@@ -10,13 +10,12 @@ public class NLPdemo {
 
     public static void main(String[] args) {
         // Example input text
-        String text = "Disney reached its 100th anniversary in October 2023, marking a magical century of captivating the hearts of children and adults alike.\n" +
-                "\n" +
-                "To honor the milestone, Disney released the short film Once Upon a Studio, uniting several of its most beloved characters on screen for the first time, including Mickey Mouse, Moana, and Sleeping Beauty. But have you ever wondered which Disney films made the most at the box office?\n" +
-                "\n" +
-                "In celebration of the studio's centennial, we've compiled a list of its most successful movies of all time. The total gross of each film has been adjusted for inflation to give you an idea of what each flick made in today's money. \n" +
-                "\n" +
-                "From recent releases to retro cartoons, read on to discover which Disney movies have made the most money. Some entries are bound to surprise you...    ";
+        String text = """
+                Disney reached its 100th anniversary in October 2023, marking a magical century of captivating the hearts of children and adults alike.
+                To honor the milestone, Disney released the short film Once Upon a Studio, uniting several of its most beloved characters on screen for the first time, including Mickey Mouse, Moana, and Sleeping Beauty. But have you ever wondered which Disney films made the most at the box office?\s
+                In celebration of the studio's centennial, we've compiled a list of its most successful movies of all time. The total gross of each film has been adjusted for inflation to give you an idea of what each flick made in today's money.\s
+                From recent releases to retro cartoons, read on to discover which Disney movies have made the most money. Some entries are bound to surprise you...   \s
+                """;
 
         // Call the function
         List<String> keywords = extractKeywords(text, "src/main/resources/stopwords.txt");

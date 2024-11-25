@@ -12,6 +12,7 @@ import java.sql.*;
 public class LoginPageController {
     @FXML
     public Button signUpSwitch;
+
     @FXML
     private PasswordField signInPass;
     @FXML
