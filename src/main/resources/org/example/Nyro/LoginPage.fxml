@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" styleClass="backgroundColor1" stylesheets="@Bg.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ui.LoginPageController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" styleClass="backgroundColor1" stylesheets="@Bg.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Nyro.LoginPageController">
     <Button fx:id="signIn" layoutX="727.0" layoutY="365.0" mnemonicParsing="false" onAction="#initialize" prefHeight="20.0" prefWidth="131.0" text="Sign In" textFill="#3a4dff">
         <font>
             <Font name="Futura Medium BT" size="15.0" />
@@ -36,9 +36,9 @@
           <Font name="Futura Medium BT" size="17.0" />
         </font>
     </Label>
-    <Button fx:id="signUpSwicth" layoutX="788.0" layoutY="503.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="140.0" style="-fx-background-color: #3a4dff;" text="Register" textFill="#f3f4f5">
+    <Button fx:id="signUpSwicth" layoutX="788.0" layoutY="503.0" mnemonicParsing="false" onAction="#register" prefHeight="35.0" prefWidth="140.0" style="-fx-background-color: #3a4dff;" text="Register" textFill="#f3f4f5">
         <font>
-          <Font name="Futura Medium BT" size="18.0" />
+          <Font name="Futura-Bold" size="16.0" />
         </font>
     </Button>
     <Text fill="#3a4dff" layoutX="140.0" layoutY="308.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nyro" wrappingWidth="221.2000274658203">
@@ -46,7 +46,7 @@
           <Font name="Open Sans Regular" size="96.0" />
         </font>
     </Text>
-    <Text fill="#f3f4f5" layoutX="103.0" layoutY="369.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Navigate your own news aura" wrappingWidth="295.80010986328125">
+    <Text fill="#f3f4f5" layoutX="103.0" layoutY="350.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Navigate your own news aura" wrappingWidth="295.80010986328125">
         <font>
           <Font name="Futura Medium BT" size="21.0" />
         </font>

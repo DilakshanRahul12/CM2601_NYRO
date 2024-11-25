@@ -1,4 +1,4 @@
-package org.example.ui;
+package org.example.Nyro;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>UI</artifactId>
+    <artifactId>NYRO</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>UI</name>
+    <name>NYRO</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,6 +38,79 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.2</version> <!-- Use the latest version -->
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version> <!-- Use the latest stable version -->
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version> <!-- Use the latest stable version -->
+        </dependency>
+
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <version>4.5.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <version>4.5.7</version>
+            <classifier>models</classifier>
+        </dependency>
+
+        <!-- Core DJL API -->
+        <dependency>
+            <groupId>ai.djl</groupId>
+            <artifactId>api</artifactId>
+            <version>0.23.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ai.djl.pytorch</groupId>
+            <artifactId>pytorch-engine</artifactId>
+            <version>0.23.0</version> <!-- Use the latest version -->
+        </dependency>
+
+
+
+<!--        <dependency>-->
+<!--            <groupId>ai.djl</groupId>-->
+<!--            <artifactId>nlp</artifactId>-->
+<!--            <version>0.23.0</version> &lt;!&ndash; Use the latest version &ndash;&gt;-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; DJL HuggingFace NLP &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>ai.djl.huggingface</groupId>-->
+<!--            <artifactId>huggingface-tokenizers</artifactId>-->
+<!--            <version>0.23.0</version> &lt;!&ndash; Replace with the latest version &ndash;&gt;-->
+<!--        </dependency>-->
+
+        <!-- Hugging Face Tokenizers -->
+        <dependency>
+            <groupId>ai.djl.huggingface</groupId>
+            <artifactId>tokenizers</artifactId>
+            <version>0.23.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -60,7 +133,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>org.example.ui/org.example.ui.NewsApp</mainClass>
+                            <mainClass>org.example.ui/org.example.Nyro.NewsApp</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

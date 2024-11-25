@@ -1,13 +1,17 @@
-package org.example.ui;
+package org.example.Nyro;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-
+import javafx.stage.Stage;
+import java.io.IOException;
 import java.sql.*;
 
 public class LoginPageController {
     @FXML
-    public Button signUpSwicth;
+    public Button signUpSwitch;
     @FXML
     private PasswordField signInPass;
     @FXML
@@ -15,8 +19,7 @@ public class LoginPageController {
     @FXML
     private Button signIn;
 
-
-
+    // Database credentials
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/Users";
     private static final String DB_USER = "postgres";
     private static final String DB_PASSWORD = "sdr8393";
@@ -30,44 +33,39 @@ public class LoginPageController {
         String email = signInEmail.getText();
         String password = signInPass.getText();
 
-        if (authenticateUser(email, password)) {
+        // Create User object
+        User user = new User(email, password);
+
+        if (!user.isValidEmail()) {
+            showAlert("Sign-In Error", "Invalid email format.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (authenticateUser(user)) {
             showAlert("Sign-In Successful", "Welcome back!", Alert.AlertType.INFORMATION);
+            // Switch to the next scene if needed, e.g., switchScene("HomePage.fxml");
         }
     }
 
-    private boolean authenticateUser(String email, String password) {
-        // Step 1: Check if the email exists
-        String emailQuery = "SELECT * FROM \"user\" WHERE email = ?";
+    private boolean authenticateUser(User user) {
         String authQuery = "SELECT * FROM \"user\" WHERE email = ? AND password = ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement emailStmt = conn.prepareStatement(emailQuery);
              PreparedStatement authStmt = conn.prepareStatement(authQuery)) {
 
-            // Check if email exists
-            emailStmt.setString(1, email);
-            ResultSet emailResult = emailStmt.executeQuery();
-
-            if (!emailResult.next()) {
-                // Email does not exist
-                showAlert("Sign-In Failed", "Email not found.", Alert.AlertType.ERROR);
-                return false;
-            }
-
-            // Step 2: Check email and password combination
-            authStmt.setString(1, email);
-            authStmt.setString(2, password);
+            // Step 1: Check email and password combination
+            authStmt.setString(1, user.getEmail());
+            authStmt.setString(2, user.getPassword());
             ResultSet authResult = authStmt.executeQuery();
 
             if (authResult.next()) {
                 // Email and password match
                 return true;
             } else {
-                // Password is incorrect
-                showAlert("Sign-In Failed", "Incorrect password.", Alert.AlertType.ERROR);
+                // Either email or password is incorrect
+                showAlert("Sign-In Failed", "Email or password is incorrect.", Alert.AlertType.ERROR);
                 return false;
             }
-
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,8 +79,21 @@ public class LoginPageController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    @FXML
+    public void register() {
+        switchScene("SignUp.fxml");
+    }
+
+    public void switchScene(String fxmlFilePath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFilePath));
+            Parent root = loader.load();
+            Stage stage = (Stage) signIn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
-
-
-
-
