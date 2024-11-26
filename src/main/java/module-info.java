@@ -7,7 +7,8 @@ module org.example.ui {
     requires ai.djl.api;
     requires java.net.http;
 
-    requires com.fasterxml.jackson.databind;     // For Jackson Databind
+    requires com.fasterxml.jackson.databind;
+    requires java.desktop;     // For Jackson Databind
 
 
     opens org.example.Nyro to javafx.fxml;

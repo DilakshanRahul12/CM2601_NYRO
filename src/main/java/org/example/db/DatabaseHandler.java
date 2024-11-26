@@ -3,7 +3,9 @@ package org.example.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.regex.Pattern;
 
 public class DatabaseHandler {
 
@@ -23,6 +25,28 @@ public class DatabaseHandler {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Validates email format.
+     *
+     * @param email The email address to validate.
+     * @return true if the email is valid, false otherwise.
+     */
+    public boolean isValidEmail(String email) {
+        String emailRegex = "^[\\w-.]+@[\\w-]+\\.[a-zA-Z]{2,}$";
+        return Pattern.matches(emailRegex, email);
+    }
+
+    /**
+     * Checks if the passwords match.
+     *
+     * @param password        The primary password.
+     * @param confirmPassword The confirmation password.
+     * @return true if the passwords match, false otherwise.
+     */
+    public boolean doPasswordsMatch(String password, String confirmPassword) {
+        return password.equals(confirmPassword);
     }
 
     /**
@@ -53,5 +77,29 @@ public class DatabaseHandler {
             return false;
         }
     }
-}
 
+    /**
+     * Authenticates a user by email and password.
+     *
+     * @param email    The user's email address.
+     * @param password The user's password.
+     * @return true if authentication succeeds, false otherwise.
+     */
+    public boolean authenticateUser(String email, String password) {
+        String authQuery = "SELECT * FROM \"user\" WHERE email = ? AND password = ?";
+
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(authQuery)) {
+
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+            ResultSet resultSet = stmt.executeQuery();
+
+            return resultSet.next(); // Return true if a matching user is found
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+}
