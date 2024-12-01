@@ -11,7 +11,8 @@ module org.example.ui {
     requires java.desktop;
     requires org.apache.lucene.core;
     requires org.json;
-    requires commons.math3;     // For Jackson Databind
+    requires commons.math3;
+    requires javafx.web;     // For Jackson Databind
 
 
     opens org.example.Nyro to javafx.fxml;

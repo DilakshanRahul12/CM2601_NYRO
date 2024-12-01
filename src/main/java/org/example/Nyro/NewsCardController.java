@@ -1,11 +1,18 @@
 package org.example.Nyro;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class NewsCardController {
 
@@ -36,24 +43,38 @@ public class NewsCardController {
         newsCategory.setText(article.getCategory());
         newsDesc.setText(article.getDescription());
         newsLink.setText(article.getSource());
-        newsLink.setOnAction(e -> openLink(article.getUrl()));
+        newsLink.setOnAction(e -> redirectToWebView(article.getUrl()));
+        read.setOnAction(e -> redirectToWebView(article.getUrl()));
 
         // Load the provided image or a default one
         try {
             Image image = new Image(article.getImgURL(), true);
             newsImg.setImage(image);
         } catch (Exception e) {
-            // Fallback to the default image
             newsImg.setImage(new Image(getClass().getResource("/images/heart.png").toExternalForm()));
         }
     }
 
-    private void openLink(String link) {
-        // Open the link in the system browser
+    private void redirectToWebView(String url) {
         try {
-            java.awt.Desktop.getDesktop().browse(new java.net.URI(link));
-        } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(getClass().getResource("NewsArticle.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("NewsArticle.fxml"));
+            Parent root = loader.load();
+
+            NewsArticleController controller = loader.getController();
+            controller.loadURL(url);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Nyro - WebView");
+            stage.show();
+        } catch (IOException e) {
+            // Show an alert dialog to inform the user of the error
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to load the webpage");
+            alert.setContentText("Please check your internet connection or try again later.");
+            alert.showAndWait();
         }
     }
 }

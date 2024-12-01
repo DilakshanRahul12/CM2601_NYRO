@@ -18,19 +18,19 @@
             <Font name="Open Sans Regular" size="54.0" />
          </font>
       </Text>
-      <Button fx:id="login" layoutX="1316.0" layoutY="20.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="80.0" style="-fx-background-color: #3a4dff;" text="Login" textFill="#f3f4f5">
+      <Button fx:id="login" layoutX="1326.0" layoutY="20.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #3a4dff;" text="Login" textFill="#f3f4f5">
          <font>
             <Font name="Futura-Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="signUp" layoutX="1228.0" layoutY="20.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="80.0" style="-fx-background-color: #3a4dff;" text="Sign Up" textFill="#f3f4f5">
+      <Button fx:id="signUp" layoutX="1218.0" layoutY="20.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #3a4dff;" text="Sign Up" textFill="#f3f4f5">
          <font>
             <Font name="Futura-Bold" size="14.0" />
          </font>
       </Button>
-      <VBox layoutX="26.0" layoutY="75.0" prefHeight="685.0" prefWidth="1370.0">
+      <VBox layoutX="26.0" layoutY="75.0" prefHeight="685.0" prefWidth="1397.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="142.0" text="Hot article">
+            <Label prefHeight="25.0" prefWidth="142.0" text="Hot article" textFill="WHITE">
                <padding>
                   <Insets bottom="3.0" right="10.0" />
                </padding>
@@ -43,17 +43,17 @@
             </Label>
             <ScrollPane prefHeight="240.0" prefWidth="1370.0" styleClass="backgroundColor3" stylesheets="@Bg.css">
                <content>
-                  <HBox fx:id="hNewsHolder" prefHeight="180.0" prefWidth="1385.0" spacing="10" styleClass="backgroundColor3" stylesheets="@Bg.css">
+                  <HBox fx:id="hNewsHolder" prefHeight="192.0" prefWidth="1430.0" spacing="10" styleClass="backgroundColor3" stylesheets="@Bg.css">
                   </HBox>
                </content>
             </ScrollPane>
-            <Label text="Recent News">
+            <Label text="Recent News" textFill="WHITE">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
 
-            <ScrollPane fx:id="recentNews" prefHeight="436.0" prefWidth="1034.0" style="-fx-background-color: #000000;" stylesheets="@Bg.css">
+            <ScrollPane fx:id="recentNews" prefHeight="436.0" prefWidth="1402.0" style="-fx-background-color: #000000;" stylesheets="@Bg.css">
                <content>
                   <TilePane fx:id="rNewsTilePane" hgap="10" prefColumns="3" styleClass="backgroundColor3" stylesheets="@Bg.css" vgap="10" />
                </content>
