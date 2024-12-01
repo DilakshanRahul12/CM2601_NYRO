@@ -1,6 +1,6 @@
 /* Styling for the main container */
 .hbox-container {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #aaa;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-padding: 15;
@@ -17,29 +17,27 @@
 /* Headline styling */
 .label-headline {
     -fx-font-size: 16px;
-    -fx-font-family: "Arial Bold";
-    -fx-text-fill: #333333;
+    -fx-text-fill: #111;
 }
 
-/* Category styling */
 .label-category {
     -fx-font-size: 12px;
     -fx-font-family: "Arial";
-    -fx-text-fill: #888888;
+    -fx-text-fill: #555;
 }
+/* Category styling */
 
 /* Date styling */
 .label-date {
     -fx-font-size: 12px;
     -fx-font-family: "Arial Italic";
-    -fx-text-fill: #555555;
+    -fx-text-fill: #555;
 }
 
 /* Description styling */
 .label-description {
-    -fx-font-size: 14px;
-    -fx-font-family: "Arial";
-    -fx-text-fill: #666666;
+    -fx-font-size: 12px;
+    -fx-text-fill: #ddd;
     -fx-wrap-text: true;
 }
 
@@ -49,8 +47,56 @@
     -fx-text-fill: #1a73e8;
 }
 
+.hyperlink:hover{
+    -fx-text-fill: #fff;
+}
+
 /* Like and Skip icons */
 .image-button {
     -fx-cursor: hand;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 3);
 }
+
+.button {
+    -fx-background-color: #000;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-family: "Futura Book BT";
+    -fx-background-radius: 5px;
+    -fx-padding: 5 10;
+    -fx-cursor: hand; /* Makes the cursor change to a pointer */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-transition: all 0.3s ease; /* Smooth transition for animations */
+}
+
+.button:hover {
+    -fx-background-color: #333; /* Lighter shade for hover effect */
+    -fx-text-fill: #fff;
+    -fx-scale-x: 1.1; /* Slightly enlarges the button horizontally */
+    -fx-scale-y: 1.1; /* Slightly enlarges the button vertically */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 3);
+}
+
+.button:pressed {
+    -fx-background-color: #222; /* Darker shade when pressed */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 0, 2);
+}
+
+.image-button {
+    -fx-cursor: hand; /* Makes the cursor a pointer */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
+    -fx-transition: all 0.3s ease; /* Smooth transition for animations */
+}
+
+.image-button:hover {
+    -fx-scale-x: 1.2; /* Enlarges horizontally */
+    -fx-scale-y: 1.2; /* Enlarges vertically */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 10, 0, 0, 4); /* More prominent shadow */
+}
+
+.image-button:pressed {
+    -fx-scale-x: 1.0; /* Returns to normal size */
+    -fx-scale-y: 1.0; /* Returns to normal size */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0, 0, 2); /* Subtle shadow */
+}
+
