@@ -11,14 +11,14 @@ import java.io.IOException;
 public class NewsApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(NewsApp.class.getResource("Login.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 960, 600);
+        FXMLLoader fxmlLoader = new FXMLLoader(NewsApp.class.getResource("GeneralizedFeed.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1440, 800);
 
 
-        stage.setMinHeight(600);
-        stage.setMinWidth(960);
-        stage.setMaxHeight(810);
-        stage.setMaxWidth(1080);
+//        stage.setMinHeight(600);
+//        stage.setMinWidth(960);
+//        stage.setMaxHeight(810);
+//        stage.setMaxWidth(1080);
 
         stage.initStyle(StageStyle.UNIFIED);
 

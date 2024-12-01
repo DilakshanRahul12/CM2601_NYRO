@@ -43,7 +43,7 @@
                 <Font name="Open Sans Regular" size="96.0" />
             </font>
         </Text>
-        <Text fill="#f3f4f5" layoutX="573.0" layoutY="349.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Navigate your own news aura" wrappingWidth="295.80010986328125">
+        <Text fill="#f3f4f5" layoutX="573.0" layoutY="349.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Navigate your own article aura" wrappingWidth="295.80010986328125">
             <font>
                 <Font name="Futura Medium BT" size="21.0" />
             </font>

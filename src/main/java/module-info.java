@@ -8,7 +8,10 @@ module org.example.ui {
     requires java.net.http;
 
     requires com.fasterxml.jackson.databind;
-    requires java.desktop;     // For Jackson Databind
+    requires java.desktop;
+    requires org.apache.lucene.core;
+    requires org.json;
+    requires commons.math3;     // For Jackson Databind
 
 
     opens org.example.Nyro to javafx.fxml;

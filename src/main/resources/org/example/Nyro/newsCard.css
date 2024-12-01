@@ -1,0 +1,56 @@
+/* Styling for the main container */
+.hbox-container {
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+}
+
+/* Styling for images */
+.image-view {
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 3);
+}
+
+/* Headline styling */
+.label-headline {
+    -fx-font-size: 16px;
+    -fx-font-family: "Arial Bold";
+    -fx-text-fill: #333333;
+}
+
+/* Category styling */
+.label-category {
+    -fx-font-size: 12px;
+    -fx-font-family: "Arial";
+    -fx-text-fill: #888888;
+}
+
+/* Date styling */
+.label-date {
+    -fx-font-size: 12px;
+    -fx-font-family: "Arial Italic";
+    -fx-text-fill: #555555;
+}
+
+/* Description styling */
+.label-description {
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial";
+    -fx-text-fill: #666666;
+    -fx-wrap-text: true;
+}
+
+/* Hyperlink styling */
+.hyperlink {
+    -fx-font-size: 12px;
+    -fx-text-fill: #1a73e8;
+}
+
+/* Like and Skip icons */
+.image-button {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 3);
+}

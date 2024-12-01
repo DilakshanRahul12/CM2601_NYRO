@@ -9,6 +9,7 @@ import org.example.utility.SceneSwitcher;
 
 public class LoginPageController {
 
+    public Button signUpSwicth;
     @FXML
     private TextField signInEmail;
     @FXML
@@ -50,7 +51,7 @@ public class LoginPageController {
     }
     @FXML
     private void register() {
-        SceneSwitcher.switchScene((Stage) signIn.getScene().getWindow(), "/org/example/Nyro/SignUp.fxml");
+        SceneSwitcher.switchScene((Stage) signUpSwicth.getScene().getWindow(), "/org/example/Nyro/SignUp.fxml");
 
     }
 }

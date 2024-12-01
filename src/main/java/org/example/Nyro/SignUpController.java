@@ -63,6 +63,5 @@ public class SignUpController {
     @FXML
     public void login() {
         SceneSwitcher.switchScene((Stage) signUp.getScene().getWindow(), "/org/example/Nyro/Login.fxml");
-
-    };
+    }
 }
