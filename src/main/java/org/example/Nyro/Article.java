@@ -26,17 +26,6 @@ public class Article {
            this.imgURL = imgURL;
     }
 
-    public Article(int id, String title, Timestamp date, String description, String content, String source, String url, String imgURL) {
-        this.id = id;
-        this.title = title;
-        this.publishedAt = date;
-        this.description = description;
-        this.source = source;
-        this.content = content;
-        this.url = url;
-        this.imgURL = imgURL;
-    }
-
     public Article(int id, String title, String description, String content) {
         this.title = title;
         this.id = id;
@@ -56,6 +45,16 @@ public class Article {
         this.imgURL = imgURL;
     }
 
+    public Article(int id, String title, Timestamp publishedAt, String description, String source, String url, String imgURL, String category) {
+        this.title = title;
+        this.publishedAt = publishedAt;
+        this.id = id;
+        this.description = description;
+        this.source = source;
+        this.url = url;
+        this.imgURL = imgURL;
+        this.category = category;
+    }
     // Getters
     public String getTitle() { return title; }
     public Timestamp getPublishedAt() { return publishedAt; } // Return as Timestamp

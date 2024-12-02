@@ -2,15 +2,17 @@ package org.example.Nyro;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import org.example.db.DatabaseHandler;
+import org.example.utility.SceneSwitcher;
 
 import java.io.IOException;
 import java.util.List;
 
-public class GeneralFeedController {
+public class FeedController {
 
     @FXML
     private HBox hNewsHolder;
@@ -21,18 +23,42 @@ public class GeneralFeedController {
     @FXML
     private TilePane rNewsTilePane;  // TilePane for recent news
 
+    @FXML
+    private Button login;
+
+    @FXML
+    private Button signUp;
+
     public void initialize() {
         DatabaseHandler dbHandler = new DatabaseHandler();
+        NewsApiFetcher newsApiFetcher = new NewsApiFetcher();
+
+        // Fetch and store new articles from the News API
+        //newsApiFetcher.fetchAndStoreNews();
 
         // Fetch 4 random articles for hot news
         List<Article> hotArticleList = dbHandler.getRandomArticles(4);
 
-        // Fetch 10 random articles for recent news
+        // Fetch 12 random articles for recent news
         List<Article> recentArticleList = dbHandler.getRandomArticles(12);
 
         // Populate the views
         populateHotNews(hotArticleList);
         populateRecentNews(recentArticleList);
+    }
+
+    @FXML
+    private void goToLogin() {
+        // Get the current stage (window) and use popScene to switch to Login.fxml
+        Stage stage = (Stage) login.getScene().getWindow();
+        SceneSwitcher.popScene(stage,"org/example/Nyro/Login.fxml");
+    }
+
+    @FXML
+    private void goToSignup() {
+        // Get the current stage (window) and use popScene to switch to SignUp.fxml
+        Stage stage = (Stage) signUp.getScene().getWindow();
+        SceneSwitcher.popScene(stage,"org/example/Nyro/SignUp.fxml");
     }
 
     private void populateHotNews(List<Article> hotArticleList) {
@@ -76,4 +102,5 @@ public class GeneralFeedController {
             }
         }
     }
+
 }

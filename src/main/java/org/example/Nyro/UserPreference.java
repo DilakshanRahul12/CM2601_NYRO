@@ -1,39 +1,66 @@
 package org.example.Nyro;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserPreference {
-    int id;
-    int favourites;
-    int read;
-    int dislike;
-    LocalDateTime logtime;
+    private final User user; // Association with User
+    private Map<Integer, LocalDateTime> favourites = new HashMap<>();
+    private Map<Integer, LocalDateTime> read = new HashMap<>();
+    private Map<Integer, LocalDateTime> dislike = new HashMap<>();
 
-    public UserPreference(int id) {
-        this.id = id;
+    public UserPreference(User user) {
+        this.user = user; // Associate with the user
     }
 
-    public int getFav() {
+    public void addToFavourites(int articleId, LocalDateTime time) {
+        favourites.put(articleId, time);
+    }
+
+    public void addToRead(int articleId, LocalDateTime time) {
+        read.put(articleId, time);
+    }
+
+    public void addToDislike(int articleId, LocalDateTime time) {
+        dislike.put(articleId, time);
+    }
+
+    public Map<Integer, LocalDateTime> getFavourites() {
         return favourites;
     }
 
-    public void setLiked(int favourites) {
-        this.favourites = favourites;
-    }
-
-    public int getRead() {
+    public Map<Integer, LocalDateTime> getRead() {
         return read;
     }
 
-    public void setRead(int read) {
-        this.read = read;
-    }
-
-    public int getDislike() {
+    public Map<Integer, LocalDateTime> getDislike() {
         return dislike;
     }
 
-    public void setDislike(int dislike) {
-        this.dislike = dislike;
+    public void removeFromFavourites(int articleId) {
+        favourites.remove(articleId);
+    }
+
+    public void removeFromRead(int articleId) {
+        read.remove(articleId);
+    }
+
+    public void removeFromDislike(int articleId) {
+        dislike.remove(articleId);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public String toString() {
+        return "UserPreference{" +
+                "user=" + user.getEmail() +
+                ", favourites=" + favourites +
+                ", read=" + read +
+                ", dislike=" + dislike +
+                '}';
     }
 }

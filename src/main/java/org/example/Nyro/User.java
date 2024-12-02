@@ -3,6 +3,7 @@ package org.example.Nyro;
 import java.util.regex.Pattern;
 
 public class User {
+    private int id;
     private String email;
     private String password;
 
@@ -10,9 +11,18 @@ public class User {
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
 
     // Constructor
-    public User(String email, String password) {
+    public User(int id, String email, String password) {
         this.email = email;
         this.password = password;
+        this.id = id; // Initialize preferences
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     // Getter and Setter methods
@@ -35,7 +45,6 @@ public class User {
     // Method to validate the email format
     public boolean isValidEmail() {
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
-        System.out.println(this.email);
         return pattern.matcher(this.email).matches();
     }
 
@@ -43,4 +52,6 @@ public class User {
     public boolean checkPasswordsMatch(String confirmPassword) {
         return this.password.equals(confirmPassword);
     }
+
+
 }

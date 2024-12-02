@@ -16,6 +16,8 @@ public class LoginPageController {
     private PasswordField signInPass;
     @FXML
     private Button signIn;
+    @FXML
+    private Button feed;
 
     private DatabaseHandler dbHandler;
 
@@ -37,7 +39,7 @@ public class LoginPageController {
 
         if (dbHandler.authenticateUser(email, password)) {
             showAlert("Sign-In Successful", "Welcome back!", Alert.AlertType.INFORMATION);
-            // Navigate to the next scene if needed
+            goToPersonalizedFeed();
         } else {
             showAlert("Sign-In Failed", "Email or password is incorrect.", Alert.AlertType.ERROR);
         }
@@ -52,6 +54,19 @@ public class LoginPageController {
     @FXML
     private void register() {
         SceneSwitcher.switchScene((Stage) signUpSwicth.getScene().getWindow(), "/org/example/Nyro/SignUp.fxml");
-
     }
+
+    @FXML
+    private void goToFeed() {
+        // Get the current stage (window) and use popScene to switch to GeneralizedFeed.fxml
+        Stage stage = (Stage) feed.getScene().getWindow();
+        SceneSwitcher.popScene(stage,"org/example/app/GeneralizedFeed.fxml");
+    }
+    @FXML
+    private void goToPersonalizedFeed() {
+        // Get the current stage (window) and use popScene to switch to GeneralizedFeed.fxml
+        Stage stage = (Stage) feed.getScene().getWindow();
+        SceneSwitcher.popScene(stage,"org/example/Nyro/PersonalizedFeed.fxml");
+    }
+
 }

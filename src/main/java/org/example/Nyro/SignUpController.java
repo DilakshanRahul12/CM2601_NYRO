@@ -16,6 +16,8 @@ public class SignUpController {
     private PasswordField signUpPass1;
     @FXML
     private Button signUp;
+    @FXML
+    private Button feed;
 
     private DatabaseHandler dbHandler;
 
@@ -42,9 +44,10 @@ public class SignUpController {
 
         if (dbHandler.insertUser(email, password)) {
             showAlert("Sign-Up Successful", "Account created successfully!", Alert.AlertType.INFORMATION);
-            clearFields();
+            goToPersonalizedFeed();
         } else {
             showAlert("Sign-Up Failed", "Unable to save user. Please try again.", Alert.AlertType.ERROR);
+            clearFields();
         }
     }
 
@@ -63,5 +66,19 @@ public class SignUpController {
     @FXML
     public void login() {
         SceneSwitcher.switchScene((Stage) signUp.getScene().getWindow(), "/org/example/Nyro/Login.fxml");
+    }
+
+    @FXML
+    private void goToFeed() {
+        // Get the current stage (window) and use popScene to switch to GeneralizedFeed.fxml
+        Stage stage = (Stage) feed.getScene().getWindow();
+        SceneSwitcher.popScene(stage,"org/example/app/GeneralizedFeed.fxml");
+    }
+
+    @FXML
+    private void goToPersonalizedFeed() {
+        // Get the current stage (window) and use popScene to switch to GeneralizedFeed.fxml
+        Stage stage = (Stage) feed.getScene().getWindow();
+        SceneSwitcher.popScene(stage,"org/example/Nyro/PersonalizedFeed.fxml");
     }
 }

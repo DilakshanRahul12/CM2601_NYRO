@@ -1,4 +1,4 @@
-package org.example.Nyro;
+package org.example.app;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +11,7 @@ import java.io.IOException;
 public class NewsApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        System.out.println(NewsApp.class.getResource("").getPath());
         FXMLLoader fxmlLoader = new FXMLLoader(NewsApp.class.getResource("GeneralizedFeed.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1440, 800);
 

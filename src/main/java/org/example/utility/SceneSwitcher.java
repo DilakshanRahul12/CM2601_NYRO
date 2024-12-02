@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class SceneSwitcher {
 
@@ -25,6 +26,30 @@ public class SceneSwitcher {
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
             System.err.println("Error: Unable to load the FXML file. Path: " + fxmlFilePath);
+        }
+    }
+
+    /**
+     * Switches the current scene to the specified FXML file using the class loader.
+     *
+     * @param stage        The current stage.
+     * @param fxmlFilePath The path to the FXML file (relative to `resources`).
+     */
+    public static void popScene(Stage stage, String fxmlFilePath) {
+        try {
+            // Load the FXML file using the class's resource loader
+            URL resource = SceneSwitcher.class.getResource("/" + fxmlFilePath);
+            if (resource == null) {
+                System.err.println("Error: FXML file not found: " + fxmlFilePath);
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error loading FXML file: " + fxmlFilePath);
         }
     }
 }

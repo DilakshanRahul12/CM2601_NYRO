@@ -10,7 +10,7 @@ public class ArticleCategorizer {
 
     public static void main(String[] args) {
         DatabaseHandler dbHandler = new DatabaseHandler();
-        int updatedArticles = dbHandler.categorizeAllArticles();
+        int updatedArticles = dbHandler.categorizeCachedArticles();
 
         System.out.println("Total articles categorized: " + updatedArticles);
     }
