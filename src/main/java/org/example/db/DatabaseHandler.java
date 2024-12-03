@@ -32,6 +32,7 @@ public class DatabaseHandler {
         this.cachedArticles = getAllArticles(); // Load articles at startup
     }
 
+
     /**
      * Returns all articles from memory.
      *
@@ -114,24 +115,40 @@ public class DatabaseHandler {
      * @param password The user's password.
      * @return true if authentication succeeds, false otherwise.
      */
-    public boolean authenticateUser(String email, String password) {
-        String query = "SELECT 1 FROM \"user\" WHERE email = ? AND password = ?";
-
+    public User authenticateUser(String email, String password) {
+        // Check credentials in the database
+        String query = "SELECT * FROM \"user\" WHERE email = ? AND password = ?";
         try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
+        PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, email);
             stmt.setString(2, password);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                // Return a User object with the fetched data
+                return new User(rs.getInt("id"), rs.getString("email"), rs.getString("password"));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return null; // Return null if authentication fails
     }
+
+    public User getUserByEmail(String email) {
+        String query = "SELECT * FROM \"user\" WHERE email = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getInt("id"), rs.getString("email"), rs.getString("password"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 
 
 // Article
@@ -283,36 +300,37 @@ public class DatabaseHandler {
 
 // USER PREFERENCE
 
-
     public boolean addToFavorites(int userId, int articleId) {
-        String query = "INSERT INTO favorites (user_id, article_id, added_at) VALUES (?, ?, CURRENT_TIMESTAMP)";
-        try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, userId);
-            stmt.setInt(2, articleId);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-
+        String query = "INSERT INTO favourites (user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
+        return executeUpdate(query, userId, articleId);
     }
 
-    public boolean addToDislikes(int userId, int articleId) {
-        String query = "INSERT INTO dislikes (user_id, article_id, added_at) VALUES (?, ?, CURRENT_TIMESTAMP)";
-        try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, userId);
-            stmt.setInt(2, articleId);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
+    // Add to read history
     public boolean addToReadHistory(int userId, int articleId) {
-        String query = "INSERT INTO read_history (user_id, article_id, read_at) VALUES (?, ?, CURRENT_TIMESTAMP)";
+        String query = "INSERT INTO read_history (user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
+        return executeUpdate(query, userId, articleId);
+    }
+
+    // Add to dislikes
+    public boolean addToDislikes(int userId, int articleId) {
+        String query = "INSERT INTO dislikes (user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
+        return executeUpdate(query, userId, articleId);
+    }
+
+    // Remove from favorites
+    public boolean removeFromFavorites(int userId, int articleId) {
+        String query = "DELETE FROM favourites WHERE user_id = ? AND article_id = ?";
+        return executeUpdate(query, userId, articleId);
+    }
+
+    // Remove from dislikes
+    public boolean removeFromDislikes(int userId, int articleId) {
+        String query = "DELETE FROM dislikes WHERE user_id = ? AND article_id = ?";
+        return executeUpdate(query, userId, articleId);
+    }
+
+    // General method to execute updates
+    private boolean executeUpdate(String query, int userId, int articleId) {
         try (Connection conn = connect();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, userId);
@@ -324,111 +342,82 @@ public class DatabaseHandler {
         }
     }
 
-    public List<Integer> getUserFavorites(int userId) {
-        String query = "SELECT article_id FROM favorites WHERE user_id = ?";
-        List<Integer> favorites = new ArrayList<>();
-        try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, userId);
-            try (ResultSet rs = stmt.executeQuery()) {
+    // Add this method to your DatabaseHandler class
+
+    public UserPreference getUserPreference(int userId) {
+        String favQuery = "SELECT article_id, added_at FROM favourites WHERE user_id = ?";
+        String readQuery = "SELECT article_id, read_at FROM read_history WHERE user_id = ?";
+        String dislikeQuery = "SELECT article_id, added_at FROM dislikes WHERE user_id = ?";
+
+        UserPreference userPreference = new UserPreference(new User(userId, "", "")); // Assuming you create a User object with the userId only
+
+        try (Connection conn = connect()) {
+            // Fetching favourites
+            try (PreparedStatement stmt = conn.prepareStatement(favQuery)) {
+                stmt.setInt(1, userId);
+                ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    favorites.add(rs.getInt("article_id"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return favorites;
-    }
-
-    /**
-     * Retrieves all articles disliked by the user.
-     *
-     * @param userId The ID of the user.
-     * @return List of article IDs the user disliked.
-     */
-    public List<Integer> getUserDislikes(int userId) {
-        String query = "SELECT article_id FROM dislikes WHERE user_id = ?";
-        List<Integer> dislikedArticles = new ArrayList<>();
-
-        try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, userId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    dislikedArticles.add(rs.getInt("article_id"));
+                    int articleId = rs.getInt("article_id");
+                    LocalDateTime timestamp = rs.getTimestamp("added_at").toLocalDateTime();
+                    userPreference.addToFavourites(articleId, timestamp);
                 }
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return dislikedArticles;
-    }
-
-    /**
-     * Retrieves all articles read by the user.
-     *
-     * @param userId The ID of the user.
-     * @return List of article IDs the user has read.
-     */
-    public List<Integer> getUserReadHistory(int userId) {
-        String query = "SELECT article_id FROM read_history WHERE user_id = ?";
-        List<Integer> readArticles = new ArrayList<>();
-
-        try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, userId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
+            // Fetching read history
+            try (PreparedStatement stmt = conn.prepareStatement(readQuery)) {
+                stmt.setInt(1, userId);
+                ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    readArticles.add(rs.getInt("article_id"));
+                    int articleId = rs.getInt("article_id");
+                    LocalDateTime timestamp = rs.getTimestamp("read_at").toLocalDateTime();
+                    userPreference.addToRead(articleId, timestamp);
+                }
+            }
+
+            // Fetching dislikes
+            try (PreparedStatement stmt = conn.prepareStatement(dislikeQuery)) {
+                stmt.setInt(1, userId);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    int articleId = rs.getInt("article_id");
+                    LocalDateTime timestamp = rs.getTimestamp("added_at").toLocalDateTime();
+                    userPreference.addToDislike(articleId, timestamp);
                 }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return readArticles;
-    }
-
-    /**
-     * Loads user preferences (favorites, dislikes, and read history) for a given user.
-     *
-     * @param user The user object.
-     * @return A UserPreference object containing the user's preferences.
-     */
-    public UserPreference loadUserPreferences(User user) {
-        UserPreference userPreference = new UserPreference(user);
-
-        // Load data from the database
-        List<Integer> favorites = getUserFavorites(user.getId());
-        List<Integer> dislikes = getUserDislikes(user.getId());
-        List<Integer> readHistory = getUserReadHistory(user.getId());
-
-        // Add data to the UserPreference object
-        favorites.forEach(id -> userPreference.addToFavourites(id, LocalDateTime.now()));
-        dislikes.forEach(id -> userPreference.addToDislike(id, LocalDateTime.now()));
-        readHistory.forEach(id -> userPreference.addToRead(id, LocalDateTime.now()));
 
         return userPreference;
     }
 
-//    public void saveUserPreferences(UserPreference userPreference) {
-//        User loggedInUser = SessionManager.getInstance().getLoggedInUser();
-//        if (loggedInUser != null && loggedInUser.getId() == userPreference.getUser().getId()) {
-//            // Save preferences to the database
-//            saveFavorites(loggedInUser.getId(), userPreference.getFavourites());
-//            saveDislikes(loggedInUser.getId(), userPreference.getDislike());
-//            saveReadHistory(loggedInUser.getId(), userPreference.getRead());
-//            System.out.println("User preferences saved for user ID: " + loggedInUser.getId());
-//        } else {
-//            System.out.println("No logged-in user or mismatched user ID. Preferences not saved.");
-//        }
-//    }
+    public Article getArticleById(int articleId) {
+        String query = "SELECT id, title, \"publishedAt\", description, content, source, \"URL\", \"imgURL\", category FROM article WHERE id = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, articleId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Article(
+                        rs.getInt("id"),
+                        rs.getString("title"),
+                        rs.getTimestamp("publishedAt"),
+                        rs.getString("description"),
+                        rs.getString("content"),
+                        rs.getString("source"),
+                        rs.getString("URL"),
+                        rs.getString("imgURL"),
+                        rs.getString("category")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }
+

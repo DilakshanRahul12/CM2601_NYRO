@@ -37,7 +37,7 @@
                            <font>
                               <Font name="System Bold Italic" size="12.0" />
                            </font></Hyperlink>
-                        <Button fx:id="read" mnemonicParsing="false" prefHeight="26.0" prefWidth="56.0" style="-fx-background-color: #000;" stylesheets="@newsCard.css" text="Read" textFill="WHITE">
+                        <Button fx:id="read" mnemonicParsing="false" onAction="#handleReadMore" prefHeight="26.0" prefWidth="56.0" style="-fx-background-color: #000;" stylesheets="@newsCard.css" text="Read" textFill="WHITE">
                            <font>
                               <Font name="Futura Book BT" size="12.0" />
                            </font>
@@ -46,10 +46,10 @@
                   </HBox>
                   <HBox prefHeight="27.0" prefWidth="35.0">
                      <children>
-                        <ImageView fx:id="fav" fitHeight="27.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true" styleClass="image-button">
+                        <ImageView fx:id="fav" fitHeight="27.0" fitWidth="37.0"  onMouseClicked="#handleFavorite" pickOnBounds="true" preserveRatio="true" styleClass="image-button">
                            <Image url="@../../../images/heart.png" />
                         </ImageView>
-                        <ImageView fx:id="dislike" fitHeight="27.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true" styleClass="image-button">
+                        <ImageView fx:id="dislike" fitHeight="27.0" fitWidth="28.0" onMouseClicked="#handleDislike" pickOnBounds="true" preserveRatio="true" styleClass="image-button">
                            <Image url="@../../../images/dislike.png" />
                         </ImageView>
                      </children>

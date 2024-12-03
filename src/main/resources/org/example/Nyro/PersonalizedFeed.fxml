@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -46,14 +45,7 @@
             </Label>
             <ScrollPane prefHeight="444.0" prefWidth="1398.0">
                <content>
-                  <GridPane prefHeight="0.0" prefWidth="0.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                  </GridPane>
+                  <TilePane fx:id="rNewsTilePane" hgap="10" prefColumns="3" styleClass="backgroundColor3" stylesheets="@Bg.css" vgap="10" />
                </content>
             </ScrollPane>
          </children>
@@ -61,8 +53,13 @@
       <ImageView fx:id="profile" fitHeight="50.0" fitWidth="50.0" layoutX="1373.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
          <Image url="@../../../images/home.png" />
       </ImageView>
-      <ImageView fx:id="history" fitHeight="50.0" fitWidth="50.0" layoutX="1307.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="history" fitHeight="50.0" fitWidth="50.0" layoutX="1307.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
          <Image url="@../../../images/home.png" />
       </ImageView>
+      <Button fx:id="signOut" layoutX="1190.0" layoutY="18.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #3a4dff;" text="Sign out" textFill="#f3f4f5">
+         <font>
+            <Font name="Futura-Bold" size="14.0" />
+         </font>
+      </Button>
    </children>
 </Pane>

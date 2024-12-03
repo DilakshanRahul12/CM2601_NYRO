@@ -11,32 +11,43 @@ import org.example.db.DatabaseHandler;
 import org.example.utility.SceneSwitcher;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PersonalizedFeedController {
 
     @FXML
     private HBox cardHolder; // HBox for Hot Articles
-
     @FXML
-    private GridPane gridPane; // GridPane for "For You" articles
+    private TilePane rNewsTilePane;
+
+    // The RecommendationEngine instance
+    private RecommendationEngine recommendationEngine;
 
     @FXML
     private Button login;
-
     @FXML
     private Button signUp;
+    @FXML
+    private Button signOut;
+
+    private User loggedInUser;
+    private UserPreference userPreference;
 
     public void initialize() {
+        // Initialize the DatabaseHandler and RecommendationEngine
         DatabaseHandler dbHandler = new DatabaseHandler();
+        this.recommendationEngine = new RecommendationEngine(dbHandler);
 
-        // Fetch articles based on user preferences
+        // Example user ID (replace with actual user ID in your application)
+        int currentUserId = getCurrentUserId();
+
+        // Fetch hot articles and personalized articles
         List<Article> hotArticleList = dbHandler.getRandomArticles(5); // Hot articles
-        //List<Article> personalizedArticles = dbHandler.getPersonalizedArticles(9); // For You articles
 
         // Populate the views
         populateHotArticles(hotArticleList);
-        //populateForYouArticles(personalizedArticles);
+        populateForYouArticles(currentUserId);
     }
 
     @FXML
@@ -74,13 +85,19 @@ public class PersonalizedFeedController {
         }
     }
 
-    private void populateForYouArticles(List<Article> personalizedArticles) {
-        int column = 0;
-        int row = 0;
+    /**
+     * Populates the "For You" section with recommended articles.
+     *
+     * @param userId The ID of the user for whom the recommendations are being generated.
+     */
+    public void populateForYouArticles(int userId) {
+        // Generate recommendations using the RecommendationEngine
+        List<Article> recommendedArticles = recommendationEngine.getRecommendations(userId, 12);
 
-        for (Article article : personalizedArticles) {
+        // Iterate through the recommended articles and add them to the HBox
+        for (Article article : recommendedArticles) {
             try {
-                // Load the Article Card FXML;
+                // Load the Article Card FXML
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("NewsCard2.fxml"));
                 Pane newsCard = loader.load();
 
@@ -90,17 +107,46 @@ public class PersonalizedFeedController {
                 // Set the article data
                 controller.setNewsData(article);
 
-                // Add the article card to the GridPane
-                gridPane.add(newsCard, column, row);
-
-                column++;
-                if (column == 3) { // Adjust number of columns as per the layout
-                    column = 0;
-                    row++;
-                }
+                // Add the article card to the HBox
+                rNewsTilePane.getChildren().add(newsCard);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    @FXML
+    private void handleLogout() {
+        // Clear the logged-in user's session
+        SessionManager.getInstance().clearSession();
+
+        // Redirect to the Login screen
+        Stage stage = (Stage) signOut.getScene().getWindow();
+        SceneSwitcher.switchScene(stage, "/org/example/app/GeneralizedFeed.fxml");
+    }
+
+    /**
+     * Fetches the current user's ID using the SessionManager.
+     *
+     * @return The current user's ID, or -1 if no user is logged in.
+     */
+    private int getCurrentUserId() {
+        User loggedInUser = SessionManager.getInstance().getLoggedInUser();
+        if (loggedInUser != null) {
+            return loggedInUser.getId();
+        }
+        System.out.println("DEBUG: No user is currently logged in.");
+        return -1; // Return -1 or handle accordingly when no user is logged in
+    }
+
+
+    public void setLoggedInUser(User user) {
+        this.loggedInUser = user;
+        this.userPreference = new UserPreference(user);
+
+        // Load user's preferences from the database if needed
+        //loadUserPreferences();
+    }
+
+
 }
