@@ -32,7 +32,7 @@
             </font>
         </Text>
 
-        <Button fx:id="login" layoutX="32.0" layoutY="503.0" mnemonicParsing="false" onAction="#login" prefHeight="35.0" prefWidth="140.0" style="-fx-background-color: #3a4dff;" text="Login" textFill="#f3f4f5">
+        <Button fx:id="login" layoutX="102.0" layoutY="500.0" mnemonicParsing="false" onAction="#login" prefHeight="35.0" prefWidth="140.0" style="-fx-background-color: #3a4dff;" text="Login" textFill="#f3f4f5">
             <font>
                 <Font name="Futura-Bold" size="16.0" />
             </font>
@@ -54,6 +54,11 @@
             <Font name="System Italic" size="12.0" />
          </font>
       </PasswordField>
+      <Button fx:id="feed" alignment="CENTER" contentDisplay="CENTER" layoutX="258.0" layoutY="500.0" mnemonicParsing="false" onAction="#goToFeed" prefHeight="35.0" prefWidth="131.0" text="Feed" textAlignment="CENTER" textFill="#3a4dff">
+         <font>
+            <Font name="Futura Bold" size="16.0" />
+         </font>
+      </Button>
 
     </children>
 </Pane>

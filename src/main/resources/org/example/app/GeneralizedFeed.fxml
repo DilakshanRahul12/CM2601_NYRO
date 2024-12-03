@@ -11,19 +11,19 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1440.0" styleClass="backgroundColor3" stylesheets="@Bg.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Nyro.GeneralFeedController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1440.0" styleClass="backgroundColor3" stylesheets="@../Nyro/Bg.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Nyro.FeedController">
    <children>
       <Text fill="#3a4dff" layoutX="26.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nyro" wrappingWidth="178.0000762939453">
          <font>
             <Font name="Open Sans Regular" size="54.0" />
          </font>
       </Text>
-      <Button fx:id="login" layoutX="1326.0" layoutY="20.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #3a4dff;" text="Login" textFill="#f3f4f5">
+      <Button fx:id="login" layoutX="1326.0" layoutY="20.0" mnemonicParsing="false" onAction="#goToLogin" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #3a4dff;" text="Login" textFill="#f3f4f5">
          <font>
             <Font name="Futura-Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="signUp" layoutX="1218.0" layoutY="20.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #3a4dff;" text="Sign Up" textFill="#f3f4f5">
+      <Button fx:id="signUp" layoutX="1218.0" layoutY="20.0" mnemonicParsing="false" onAction="#goToSignup" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #3a4dff;" text="Sign Up" textFill="#f3f4f5">
          <font>
             <Font name="Futura-Bold" size="14.0" />
          </font>
@@ -41,9 +41,9 @@
                   <Insets />
                </VBox.margin>
             </Label>
-            <ScrollPane prefHeight="240.0" prefWidth="1370.0" styleClass="backgroundColor3" stylesheets="@Bg.css">
+            <ScrollPane prefHeight="240.0" prefWidth="1370.0" styleClass="backgroundColor3" stylesheets="@../Nyro/Bg.css">
                <content>
-                  <HBox fx:id="hNewsHolder" prefHeight="192.0" prefWidth="1430.0" spacing="10" styleClass="backgroundColor3" stylesheets="@Bg.css">
+                  <HBox fx:id="hNewsHolder" prefHeight="192.0" prefWidth="1430.0" spacing="10" styleClass="backgroundColor3" stylesheets="@../Nyro/Bg.css">
                   </HBox>
                </content>
             </ScrollPane>
@@ -53,9 +53,9 @@
                </font>
             </Label>
 
-            <ScrollPane fx:id="recentNews" prefHeight="436.0" prefWidth="1402.0" style="-fx-background-color: #000000;" stylesheets="@Bg.css">
+            <ScrollPane fx:id="recentNews" prefHeight="436.0" prefWidth="1402.0" style="-fx-background-color: #000000;" stylesheets="@../Nyro/Bg.css">
                <content>
-                  <TilePane fx:id="rNewsTilePane" hgap="10" prefColumns="3" styleClass="backgroundColor3" stylesheets="@Bg.css" vgap="10" />
+                  <TilePane fx:id="rNewsTilePane" hgap="10" prefColumns="3" styleClass="backgroundColor3" stylesheets="@../Nyro/Bg.css" vgap="10" />
                </content>
             </ScrollPane>
 

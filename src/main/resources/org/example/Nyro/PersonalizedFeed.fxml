@@ -4,35 +4,25 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" styleClass="backgroundColor3" stylesheets="@Bg.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1440.0" styleClass="backgroundColor3" stylesheets="@Bg.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Nyro.PersonalizedFeedController">
    <children>
       <Text fill="#3a4dff" layoutX="26.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nyro" wrappingWidth="178.0000762939453">
          <font>
             <Font name="Open Sans Regular" size="54.0" />
          </font>
       </Text>
-      <Button fx:id="login" layoutX="859.0" layoutY="20.0" mnemonicParsing="false" onAction="#login" prefHeight="35.0" prefWidth="80.0" style="-fx-background-color: #3a4dff;" text="Login" textFill="#f3f4f5">
-         <font>
-            <Font name="Futura-Bold" size="14.0" />
-         </font>
-      </Button>
-      <Button fx:id="signUp" layoutX="771.0" layoutY="20.0" mnemonicParsing="false" onAction="#login" prefHeight="35.0" prefWidth="80.0" style="-fx-background-color: #3a4dff;" text="Sign Up" textFill="#f3f4f5">
-         <font>
-            <Font name="Futura-Bold" size="14.0" />
-         </font>
-      </Button>
-      <VBox layoutX="26.0" layoutY="75.0" prefHeight="524.0" prefWidth="913.0">
+      <VBox layoutX="26.0" layoutY="75.0" prefHeight="685.0" prefWidth="1397.0">
          <children>
-            <Label prefHeight="26.0" prefWidth="142.0" text="Hot article">
+            <Label prefHeight="26.0" prefWidth="142.0" text="Hot article" textFill="WHITE">
                <padding>
                   <Insets bottom="5.0" right="10.0" />
                </padding>
@@ -43,29 +33,33 @@
                   <Insets />
                </VBox.margin>
             </Label>
-            <ScrollPane prefHeight="177.0" prefWidth="914.0">
+            <ScrollPane prefHeight="240.0" prefWidth="1370.0" styleClass="backgroundColor3" stylesheets="@Bg.css">
                <content>
-                  <HBox fx:id="cardHolder" prefHeight="180.0" prefWidth="1010.0" />
+                  <HBox fx:id="cardHolder" prefHeight="240.0" prefWidth="1370.0" styleClass="backgroundColor3" stylesheets="@Bg.css" />
                </content>
             </ScrollPane>
-            <Label text="For you">
+            <Label text="For you" textFill="WHITE">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <ScrollPane prefHeight="264.0" prefWidth="914.0">
+            <ScrollPane prefHeight="444.0" prefWidth="1398.0">
                <content>
-                  <GridPane prefHeight="0.0" prefWidth="0.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                  </GridPane>
+                  <TilePane fx:id="rNewsTilePane" hgap="10" prefColumns="3" styleClass="backgroundColor3" stylesheets="@Bg.css" vgap="10" />
                </content>
             </ScrollPane>
          </children>
       </VBox>
+      <ImageView fx:id="profile" fitHeight="50.0" fitWidth="50.0" layoutX="1373.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../../images/home.png" />
+      </ImageView>
+      <ImageView fx:id="history" fitHeight="50.0" fitWidth="50.0" layoutX="1307.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../../images/home.png" />
+      </ImageView>
+      <Button fx:id="signOut" layoutX="1190.0" layoutY="18.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #3a4dff;" text="Sign out" textFill="#f3f4f5">
+         <font>
+            <Font name="Futura-Bold" size="14.0" />
+         </font>
+      </Button>
    </children>
 </Pane>

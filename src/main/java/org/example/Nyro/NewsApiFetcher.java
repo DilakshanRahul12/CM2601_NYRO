@@ -1,3 +1,4 @@
+
 package org.example.Nyro;
 
 import java.io.IOException;
@@ -85,8 +86,8 @@ public class NewsApiFetcher {
         }
     }
 
-    public static void main(String[] args) {
-        NewsApiFetcher fetcher = new NewsApiFetcher();
-        fetcher.fetchAndStoreNews();
-    }
+//    public static void main(String[] args) {
+//        NewsApiFetcher fetcher = new NewsApiFetcher();
+//        fetcher.fetchAndStoreNews();
+//    }
 }

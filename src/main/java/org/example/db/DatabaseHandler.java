@@ -1,9 +1,11 @@
 package org.example.db;
 
-import org.example.Nyro.Article;
-import org.example.Nyro.ArticleCategorizer;
+import org.example.Nyro.*;
+
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -20,6 +22,26 @@ public class DatabaseHandler {
     private static final String DB_USER = "postgres";
     private static final String DB_PASSWORD = "sdr8393";
 
+    // Cached articles
+    private List<Article> cachedArticles = new ArrayList<>();
+
+    /**
+     * Initializes the DatabaseHandler by loading all articles into memory.
+     */
+    public DatabaseHandler() {
+        this.cachedArticles = getAllArticles(); // Load articles at startup
+    }
+
+
+    /**
+     * Returns all articles from memory.
+     *
+     * @return List of all articles.
+     */
+    public List<Article> getCachedArticles() {
+        return cachedArticles;
+    }
+
     /**
      * Establishes a connection to the database.
      *
@@ -33,6 +55,10 @@ public class DatabaseHandler {
             return null;
         }
     }
+
+
+// User
+
 
     /**
      * Validates email format.
@@ -89,29 +115,47 @@ public class DatabaseHandler {
      * @param password The user's password.
      * @return true if authentication succeeds, false otherwise.
      */
-    public boolean authenticateUser(String email, String password) {
-        String query = "SELECT 1 FROM \"user\" WHERE email = ? AND password = ?";
-
+    public User authenticateUser(String email, String password) {
+        // Check credentials in the database
+        String query = "SELECT * FROM \"user\" WHERE email = ? AND password = ?";
         try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
+        PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, email);
             stmt.setString(2, password);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                // Return a User object with the fetched data
+                return new User(rs.getInt("id"), rs.getString("email"), rs.getString("password"));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return null; // Return null if authentication fails
     }
 
+    public User getUserByEmail(String email) {
+        String query = "SELECT * FROM \"user\" WHERE email = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getInt("id"), rs.getString("email"), rs.getString("password"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
+// Article
+
+
     /**
-     * Inserts an article into the database.
-     *
-     * @return true if the insertion was successful, false otherwise.
+     * Inserts a news article into the database.
      */
     public boolean insertArticle(String title, String description, String content, String source, Timestamp publishedAt, String url, String imgUrl) {
         String query = "INSERT INTO article (title, description, content, source, \"publishedAt\", \"URL\", \"imgURL\") VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -139,7 +183,7 @@ public class DatabaseHandler {
      * Retrieves a list of random articles from the database.
      */
     public List<Article> getRandomArticles(int limit) {
-        String query = "SELECT id, title, \"publishedAt\", description, source, \"URL\", \"imgURL\" FROM article ORDER BY RANDOM() LIMIT ?";
+        String query = "SELECT id, title, \"publishedAt\", description, source, \"URL\", \"imgURL\", category FROM article ORDER BY RANDOM() LIMIT ?";
         List<Article> articles = new ArrayList<>();
 
         try (Connection conn = connect();
@@ -156,7 +200,8 @@ public class DatabaseHandler {
                             rs.getString("description"),
                             rs.getString("source"),
                             rs.getString("URL"),
-                            rs.getString("imgURL")
+                            rs.getString("imgURL"),
+                            rs.getString("category")
                     ));
                 }
             }
@@ -169,18 +214,193 @@ public class DatabaseHandler {
     }
 
     /**
+     * Retrieves a list of random articles from the cached articles.
+     *
+     * @param limit The number of random articles to fetch.
+     * @return List of random articles.
+     */
+    public List<Article> getRandomArticlesFromCache(int limit) {
+        List<Article> shuffledArticles = new ArrayList<>(cachedArticles);
+        Collections.shuffle(shuffledArticles); // Shuffle the list
+        return shuffledArticles.stream().limit(limit).collect(Collectors.toList());
+    }
+
+
+    /**
      * Retrieves all articles from the database.
      */
     public List<Article> getAllArticles() {
-        String query = "SELECT id, title, \"publishedAt\", description, content, source, \"URL\", \"imgURL\", category FROM article";
-        List<Article> articles = new ArrayList<>();
+            String query = "SELECT id, title, \"publishedAt\", description, content, source, \"URL\", \"imgURL\", category FROM article";
+            List<Article> articles = new ArrayList<>();
 
+            try (Connection conn = connect();
+                 PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    articles.add(new Article(
+                            rs.getInt("id"),
+                            rs.getString("title"),
+                            rs.getTimestamp("publishedAt"),
+                            rs.getString("description"),
+                            rs.getString("content"),
+                            rs.getString("source"),
+                            rs.getString("URL"),
+                            rs.getString("imgURL"),
+                            rs.getString("category")
+                    ));
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return articles;
+        }
+
+
+    /**
+     * Categorizes uncategorized articles in the cached list.
+     *
+     * @return The number of articles updated.
+     */
+    public int categorizeCachedArticles() {
+        int updatedCount = 0;
+
+        for (Article article : cachedArticles) {
+            if (article.getCategory() == null || article.getCategory().isBlank()) {
+                String newCategory = new ArticleCategorizer().categorizeArticle(article.getDescription(), article.getContent());
+
+                if (newCategory != null && !newCategory.isBlank()) {
+                    boolean success = updateArticleCategory(article.getId(), newCategory);
+                    if (success) {
+                        article.setCategory(newCategory); // Update in memory
+                        updatedCount++;
+                    }
+                }
+            }
+        }
+        return updatedCount;
+    }
+
+    public boolean updateArticleCategory(int articleId, String category) {
+        String query = "UPDATE article SET category = ? WHERE id = ?";
         try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(query);) {
+            stmt.setString(1, category);
+            stmt.setInt(2, articleId);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-            while (rs.next()) {
-                articles.add(new Article(
+
+// USER PREFERENCE
+
+    public boolean addToFavorites(int userId, int articleId) {
+        String query = "INSERT INTO favourites (user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
+        return executeUpdate(query, userId, articleId);
+    }
+
+    // Add to read history
+    public boolean addToReadHistory(int userId, int articleId) {
+        String query = "INSERT INTO read_history (user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
+        return executeUpdate(query, userId, articleId);
+    }
+
+    // Add to dislikes
+    public boolean addToDislikes(int userId, int articleId) {
+        String query = "INSERT INTO dislikes (user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
+        return executeUpdate(query, userId, articleId);
+    }
+
+    // Remove from favorites
+    public boolean removeFromFavorites(int userId, int articleId) {
+        String query = "DELETE FROM favourites WHERE user_id = ? AND article_id = ?";
+        return executeUpdate(query, userId, articleId);
+    }
+
+    // Remove from dislikes
+    public boolean removeFromDislikes(int userId, int articleId) {
+        String query = "DELETE FROM dislikes WHERE user_id = ? AND article_id = ?";
+        return executeUpdate(query, userId, articleId);
+    }
+
+    // General method to execute updates
+    private boolean executeUpdate(String query, int userId, int articleId) {
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, articleId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Add this method to your DatabaseHandler class
+
+    public UserPreference getUserPreference(int userId) {
+        String favQuery = "SELECT article_id, added_at FROM favourites WHERE user_id = ?";
+        String readQuery = "SELECT article_id, read_at FROM read_history WHERE user_id = ?";
+        String dislikeQuery = "SELECT article_id, added_at FROM dislikes WHERE user_id = ?";
+
+        UserPreference userPreference = new UserPreference(new User(userId, "", "")); // Assuming you create a User object with the userId only
+
+        try (Connection conn = connect()) {
+            // Fetching favourites
+            try (PreparedStatement stmt = conn.prepareStatement(favQuery)) {
+                stmt.setInt(1, userId);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    int articleId = rs.getInt("article_id");
+                    LocalDateTime timestamp = rs.getTimestamp("added_at").toLocalDateTime();
+                    userPreference.addToFavourites(articleId, timestamp);
+                }
+            }
+
+            // Fetching read history
+            try (PreparedStatement stmt = conn.prepareStatement(readQuery)) {
+                stmt.setInt(1, userId);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    int articleId = rs.getInt("article_id");
+                    LocalDateTime timestamp = rs.getTimestamp("read_at").toLocalDateTime();
+                    userPreference.addToRead(articleId, timestamp);
+                }
+            }
+
+            // Fetching dislikes
+            try (PreparedStatement stmt = conn.prepareStatement(dislikeQuery)) {
+                stmt.setInt(1, userId);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    int articleId = rs.getInt("article_id");
+                    LocalDateTime timestamp = rs.getTimestamp("added_at").toLocalDateTime();
+                    userPreference.addToDislike(articleId, timestamp);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return userPreference;
+    }
+
+    public Article getArticleById(int articleId) {
+        String query = "SELECT id, title, \"publishedAt\", description, content, source, \"URL\", \"imgURL\", category FROM article WHERE id = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, articleId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Article(
                         rs.getInt("id"),
                         rs.getString("title"),
                         rs.getTimestamp("publishedAt"),
@@ -190,90 +410,14 @@ public class DatabaseHandler {
                         rs.getString("URL"),
                         rs.getString("imgURL"),
                         rs.getString("category")
-                ));
+                );
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return articles;
+        return null;
     }
 
-    /**
-     * Updates the keywords of an article.
-     */
-    public boolean updateArticleKeywords(int articleId, List<String> keywords) {
-        String query = "UPDATE article SET keywords = ? WHERE id = ?";
-
-        try (Connection conn = connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            List<String> cleanKeywords = keywords.stream()
-                    .map(keyword -> keyword.replaceAll("[^\\x20-\\x7E]", ""))
-                    .filter(keyword -> !keyword.isBlank())
-                    .collect(Collectors.toList());
-
-            if (cleanKeywords.isEmpty()) return false;
-
-            Array sqlArray = conn.createArrayOf("text", cleanKeywords.toArray(new String[0]));
-
-            stmt.setArray(1, sqlArray);
-            stmt.setInt(2, articleId);
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * Categorizes uncategorized articles in the database.
-     *
-     * @return The number of articles updated.
-     */
-    public int categorizeAllArticles() {
-        String updateQuery = "UPDATE article SET category = ? WHERE id = ?";
-        int updatedCount = 0;
-
-        // Fetch all articles
-        List<Article> articles = getAllArticles();
-
-        // Filter articles without a category
-        List<Article> uncategorizedArticles = articles.stream()
-                .filter(article -> article.getCategory() == null || article.getCategory().isBlank())
-                .toList();
-
-        try (Connection conn = connect()) {
-            if (conn == null) {
-                System.out.println("Database connection failed.");
-                return 0;
-            }
-
-            for (Article article : uncategorizedArticles) {
-                // Categorize the article
-                String newCategory = new ArticleCategorizer().categorizeArticle(article.getDescription(), article.getContent());
-
-                if (newCategory != null && !newCategory.isBlank()) {
-                    // Update the category in the database
-                    try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
-                        updateStmt.setString(1, newCategory);
-                        updateStmt.setInt(2, article.getId());
-                        if (updateStmt.executeUpdate() > 0) {
-                            updatedCount++;
-                            System.out.println("Article ID: " + article.getId() + " categorized as: " + newCategory);
-                        }
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Error updating article categories:");
-            e.printStackTrace();
-        }
-
-        return updatedCount;
-    }
 
 }
+

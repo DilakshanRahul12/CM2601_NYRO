@@ -15,6 +15,9 @@ module org.example.ui {
     requires javafx.web;     // For Jackson Databind
 
 
-    opens org.example.Nyro to javafx.fxml;
+
     exports org.example.Nyro;
+    opens org.example.Nyro to javafx.fxml;
+    exports org.example.app;
+    opens org.example.app to javafx.fxml;
 }
