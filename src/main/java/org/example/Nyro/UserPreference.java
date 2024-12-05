@@ -39,18 +39,6 @@ public class UserPreference {
         return dislike;
     }
 
-    public void removeFromFavourites(int articleId) {
-        favourites.remove(articleId);
-    }
-
-    public void removeFromRead(int articleId) {
-        read.remove(articleId);
-    }
-
-    public void removeFromDislike(int articleId) {
-        dislike.remove(articleId);
-    }
-
     public User getUser() {
         return user;
     }
