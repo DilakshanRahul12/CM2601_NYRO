@@ -57,6 +57,12 @@ public class SignUpController {
 
                 // Redirect to the Personalized Feed
                 Stage currentStage = (Stage) signUpEmail.getScene().getWindow();
+
+                NewsApiFetcher newsApiFetcher = new NewsApiFetcher();
+                newsApiFetcher.fetchAndStoreNews();
+                int catCount = dbHandler.categorizeCachedArticles();
+                System.out.println(catCount);
+
                 redirectToPersonalizedFeed(newUser, currentStage);
             } else {
                 showAlert("Sign-Up Error", "Unable to fetch user data. Please try logging in.", Alert.AlertType.ERROR);

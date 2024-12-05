@@ -12,7 +12,8 @@ module org.example.ui {
     requires org.apache.lucene.core;
     requires org.json;
     requires commons.math3;
-    requires javafx.web;     // For Jackson Databind
+    requires javafx.web;
+    requires com.google.gson;     // For Jackson Databind
 
 
 
@@ -20,4 +21,6 @@ module org.example.ui {
     opens org.example.Nyro to javafx.fxml;
     exports org.example.app;
     opens org.example.app to javafx.fxml;
+    opens org.example.service to javafx.fxml;
+    exports org.example.service;
 }

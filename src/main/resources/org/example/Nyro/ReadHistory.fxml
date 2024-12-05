@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="backgroundColor3" stylesheets="@Bg.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Nyro.ReadHistoryController">
+   <children>
+      <TableView fx:id="readHistoryTable" layoutX="44.0" layoutY="80.0" prefHeight="498.0" prefWidth="735.0" styleClass="backgroundColor3" stylesheets="@Bg.css">
+        <columns>
+          <TableColumn fx:id="titleColumn" prefWidth="156.0" text="Title" />
+            <TableColumn fx:id="categoryColumn" minWidth="0.0" prefWidth="174.4000244140625" text="Category" />
+            <TableColumn fx:id="urlColumn" prefWidth="243.99993896484375" text="URL" />
+          <TableColumn fx:id="dateTimeColumn" prefWidth="156.0" text="Date &amp; Time" />
+        </columns>
+      </TableView>
+      <Text fill="#3a4dff" layoutX="44.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nyro" wrappingWidth="178.0000762939453">
+         <font>
+            <Font name="Open Sans Regular" size="54.0" />
+         </font>
+      </Text>
+      <ImageView fx:id="feed" fitHeight="56.0" fitWidth="61.0" layoutX="645.0" layoutY="14.0" onMouseClicked="#goToFeed" pickOnBounds="true" preserveRatio="true">
+          <Image url="@../../../images/home.png" />
+      </ImageView>
+      <ImageView fx:id="profile" fitHeight="56.0" fitWidth="61.0" layoutX="718.0" layoutY="14.0" onMouseClicked="#goToProfile" pickOnBounds="true" preserveRatio="true">
+          <Image url="@../../../images/Profile.png" />
+      </ImageView>
+   </children>
+</Pane>

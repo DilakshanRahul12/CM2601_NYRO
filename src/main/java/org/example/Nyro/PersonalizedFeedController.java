@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.example.db.DatabaseHandler;
@@ -30,6 +31,10 @@ public class PersonalizedFeedController {
     private Button signUp;
     @FXML
     private Button signOut;
+    @FXML
+    private ImageView history;
+    @FXML
+    private ImageView profile;
 
     private User loggedInUser;
     private UserPreference userPreference;
@@ -53,15 +58,15 @@ public class PersonalizedFeedController {
     @FXML
     private void goToProfile() {
         // Switch to Login screen
-        Stage stage = (Stage) login.getScene().getWindow();
+        Stage stage = (Stage) profile.getScene().getWindow();
         SceneSwitcher.popScene(stage, "org/example/Nyro/Login.fxml");
     }
 
     @FXML
     private void goToHistory() {
         // Switch to Sign Up screen
-        Stage stage = (Stage) signUp.getScene().getWindow();
-        SceneSwitcher.popScene(stage, "org/example/Nyro/SignUp.fxml");
+        Stage stage = (Stage) history.getScene().getWindow();
+        SceneSwitcher.popScene(stage, "org/example/Nyro/ReadHistory.fxml");
     }
 
     private void populateHotArticles(List<Article> hotArticleList) {
@@ -92,7 +97,7 @@ public class PersonalizedFeedController {
      */
     public void populateForYouArticles(int userId) {
         // Generate recommendations using the RecommendationEngine
-        List<Article> recommendedArticles = recommendationEngine.getRecommendations(userId, 12);
+        List<Article> recommendedArticles = recommendationEngine.getRecommendations(userId, 24);
 
         // Iterate through the recommended articles and add them to the HBox
         for (Article article : recommendedArticles) {

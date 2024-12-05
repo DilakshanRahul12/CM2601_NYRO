@@ -1,6 +1,7 @@
 package org.example.db;
 
 import org.example.Nyro.*;
+import org.example.service.ArticleCategorizer;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -11,9 +12,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- *
  *   Implement a demo database too/ import
- *
  */
 
 public class DatabaseHandler {
@@ -297,6 +296,30 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * Checks if an article title already exists in the database.
+     *
+     * @param title The title of the article.
+     * @return true if the title exists, false otherwise.
+     */
+    public boolean isTitleExists(String title) {
+        String query = "SELECT COUNT(*) FROM article WHERE title = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, title);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 
 // USER PREFERENCE
 
@@ -417,6 +440,80 @@ public class DatabaseHandler {
         }
         return null;
     }
+
+
+    // READ ARTICLE
+    public int getArticleIdByUrl(String url) {
+        String query = "SELECT id FROM article WHERE \"URL\" = ?"; // Replace 'articles' with your table name
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query))  {
+
+            stmt.setString(1, url);
+            ResultSet resultSet = stmt.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            } else {
+                System.out.println("No article found for the given URL.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Return -1 if no article is found
+    }
+
+
+    // USER MANAGEMENT ADMIN
+
+    /**
+     * Retrieves all users from the database.
+     *
+     * @return List of User objects representing all users in the database.
+     */
+    public List<User> getAllUsers() {
+        String query = "SELECT id, email, password FROM \"user\"";
+        List<User> users = new ArrayList<>();
+
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                users.add(new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                ));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    /**
+     * Deletes a user from the database by ID.
+     *
+     * @param userId The ID of the user to delete.
+     * @return true if the deletion was successful, false otherwise.
+     */
+    public boolean deleteUserById(int userId) {
+        String query = "DELETE FROM \"user\" WHERE id = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, userId);
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
 
 }

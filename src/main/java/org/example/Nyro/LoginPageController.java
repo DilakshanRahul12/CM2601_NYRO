@@ -50,6 +50,8 @@ public class LoginPageController {
 
             // Redirect to the Personalized Feed
             Stage currentStage = (Stage) signInEmail.getScene().getWindow();
+            NewsApiFetcher newsApiFetcher = new NewsApiFetcher();
+            //newsApiFetcher.fetchAndStoreNews();                               Enables News Fetching
             redirectToPersonalizedFeed(authenticatedUser, currentStage);
         } else {
             showAlert("Sign-In Failed", "Email or password is incorrect.", Alert.AlertType.ERROR);
@@ -100,6 +102,13 @@ public class LoginPageController {
             e.printStackTrace();
             System.err.println("Error loading PersonalizedFeed.fxml");
         }
+    }
+
+    @FXML
+    private void goToAdmin() {
+        // Get the current stage (window) and use popScene to switch to GeneralizedFeed.fxml
+        Stage stage = (Stage) feed.getScene().getWindow();
+        SceneSwitcher.popScene(stage,"org/example/app/GeneralizedFeed.fxml");
     }
 
     private void redirectToPersonalizedFeed(User user, Stage stage) {
