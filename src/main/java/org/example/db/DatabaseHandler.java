@@ -514,6 +514,106 @@ public class DatabaseHandler {
     }
 
 
+    // Profile
+
+    /**
+     * Retrieves a list of titles of favorite articles for a specific user.
+     *
+     * @param userId The ID of the user.
+     * @return List of titles of favorite articles.
+     */
+    public List<String> getFavoriteArticlesByUserId(int userId) {
+        String query = "SELECT a.title FROM favourites f " +
+                "JOIN article a ON f.article_id = a.id " +
+                "WHERE f.user_id = ?";
+        List<String> favoriteArticles = new ArrayList<>();
+
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    favoriteArticles.add(rs.getString("title"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return favoriteArticles;
+    }
+
+    /**
+     * Retrieves a list of titles of disliked articles for a specific user.
+     *
+     * @param userId The ID of the user.
+     * @return List of titles of disliked articles.
+     */
+    public List<String> getDislikedArticlesByUserId(int userId) {
+        String query = "SELECT a.title FROM dislikes d " +
+                "JOIN article a ON d.article_id = a.id " +
+                "WHERE d.user_id = ?";
+        List<String> dislikedArticles = new ArrayList<>();
+
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    dislikedArticles.add(rs.getString("title"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return dislikedArticles;
+    }
+
+    /**
+     * Validates the current password for a user.
+     *
+     * @param userId The ID of the user.
+     * @param currentPassword The current password to validate.
+     * @return true if the password is valid, false otherwise.
+     */
+    public boolean validatePassword(int userId, String currentPassword) {
+        String query = "SELECT 1 FROM \"user\" WHERE id = ? AND password = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, currentPassword);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // Return true if a record is found
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Updates the password for a user in the database.
+     *
+     * @param userId The ID of the user.
+     * @param newPassword The new password to set.
+     * @return true if the password was successfully updated, false otherwise.
+     */
+    public boolean updateUserPassword(int userId, String newPassword) {
+        String query = "UPDATE \"user\" SET password = ? WHERE id = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, newPassword);
+            stmt.setInt(2, userId);
+
+            return stmt.executeUpdate() > 0; // Return true if the update was successful
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 
 }

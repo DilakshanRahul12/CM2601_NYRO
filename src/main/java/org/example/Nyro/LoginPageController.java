@@ -108,7 +108,7 @@ public class LoginPageController {
     private void goToAdmin() {
         // Get the current stage (window) and use popScene to switch to GeneralizedFeed.fxml
         Stage stage = (Stage) feed.getScene().getWindow();
-        SceneSwitcher.popScene(stage,"org/example/app/GeneralizedFeed.fxml");
+        SceneSwitcher.popScene(stage,"org/example/app/AdminManageUser.fxml");
     }
 
     private void redirectToPersonalizedFeed(User user, Stage stage) {

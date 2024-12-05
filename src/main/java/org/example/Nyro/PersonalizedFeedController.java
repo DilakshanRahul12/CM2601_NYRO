@@ -59,7 +59,7 @@ public class PersonalizedFeedController {
     private void goToProfile() {
         // Switch to Login screen
         Stage stage = (Stage) profile.getScene().getWindow();
-        SceneSwitcher.popScene(stage, "org/example/Nyro/Login.fxml");
+        SceneSwitcher.popScene(stage, "org/example/Nyro/Profile.fxml");
     }
 
     @FXML
