@@ -48,3 +48,36 @@ Where:
 This scoring ensures continuous refinement of recommendations, adapting dynamically to user preferences.
 
 ---
+
+## **Technologies and Dependencies**
+
+### **Technologies Used**
+- **News API**: For fetching articles.  
+- **Machine Learning Model**: [paraphrase-MiniLM-L3-v2](https://huggingface.co/sentence-transformers/paraphrase-MiniLM-L3-v2) for fine-grained categorization.  
+- **JavaFX**: For building the user interface.  
+- **PostgreSQL**: As the database system.  
+- **Flask API**: For backend API development.
+
+### **Dependencies**
+- **PostgreSQL Driver**: Version 42.7.2  
+- **Apache Commons Math**: Version 3.6.1  
+- **Jackson Databind**: Version 2.15.2  
+- **JSON Library**: Version 20240303  
+- **Google Gson**: Version 2.10.1
+- 
+
+## **Prerequisites**
+
+- **JDBC Driver**: Ensure you have the JDBC driver installed for connecting to PostgreSQL.  
+- **PGAdmin/PostgreSQL**: Set up PostgreSQL and PGAdmin for managing the database.
+
+### **Setup Steps**
+1. Open the `ArticleCategorizer.py` (Flask) and run the script:  
+   ```bash
+   python ArticleCategorizer.py 
+    ```
+---
+
+#### _Run the DatabaseCreate main method in the Java project to initialize the database._
+
+### Finally, run the NewsApp to launch the application.
