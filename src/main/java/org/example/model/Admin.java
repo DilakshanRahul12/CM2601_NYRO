@@ -1,25 +1,18 @@
 package org.example.model;
 
 public class Admin {
-    private String adminId;
-    private String name;
+    private int adminId;
+    private String password;
     private String email;
 
-    public Admin(String adminId, String name, String email) {
-        this.adminId = adminId;
-        this.name = name;
+    public Admin(String email, String password) {
         this.email = email;
+        this.password = password;
     }
-
-    public String getAdminId() {
-        return adminId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public String getEmail() {
         return email;
+    }
+    public String getPassword() {
+        return password;
     }
 }
