@@ -51,7 +51,7 @@
          </children>
       </VBox>
       <ImageView fx:id="profile" fitHeight="50.0" fitWidth="50.0" layoutX="1373.0" layoutY="13.0" onMouseClicked="#goToProfile" pickOnBounds="true" preserveRatio="true">
-         <Image url="@../../../images/profile.png" />
+         <Image url="@../../../images/Profile.png" />
       </ImageView>
       <ImageView fx:id="history" fitHeight="50.0" fitWidth="50.0" layoutX="1307.0" layoutY="13.0" onMouseClicked="#goToHistory" pickOnBounds="true" preserveRatio="true">
          <Image url="@../../../images/history.png" />
