@@ -7,14 +7,8 @@ import org.example.service.ArticleCategorizer;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-/**
- *   Implement a demo database too/ import
- */
 
 public class DatabaseHandler {
 
@@ -411,8 +405,8 @@ public class DatabaseHandler {
         return null;
     }
 
-
     // READ ARTICLE
+
     public int getArticleIdByUrl(String url) {
         String query = "SELECT id FROM article WHERE \"URL\" = ?"; // Replace 'articles' with your table name
         try (Connection conn = connect();
@@ -431,7 +425,6 @@ public class DatabaseHandler {
         }
         return -1; // Return -1 if no article is found
     }
-
 
     // USER MANAGEMENT ADMIN
 
@@ -482,7 +475,6 @@ public class DatabaseHandler {
             return false;
         }
     }
-
 
     // Profile
 
@@ -584,9 +576,7 @@ public class DatabaseHandler {
         return false;
     }
 
-
     // ADMIN
-
 
     public Admin authenticateAdmin(String email, String password) {
         String query = "SELECT admin_id, email FROM admin WHERE email = ? AND password = ?";
@@ -609,8 +599,6 @@ public class DatabaseHandler {
         }
         return null; // Return null if authentication fails
     }
-
-
 
 }
 
