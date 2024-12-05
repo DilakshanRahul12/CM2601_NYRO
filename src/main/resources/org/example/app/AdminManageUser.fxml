@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" styleClass="backgroundColor3" stylesheets="@../Nyro/Bg.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Nyro.AdminManageUsersController">
+    <children>
+        <!-- Title -->
+        <Text fill="#3a4dff" layoutX="20.0" layoutY="50.0" text="User Management" wrappingWidth="300.0">
+            <font>
+                <Font size="36.0" />
+            </font>
+        </Text>
+
+        <!-- TableView for Users -->
+        <TableView fx:id="userTable" layoutX="126.0" layoutY="100.0" prefHeight="400.0" prefWidth="546.0" styleClass="backgroundColor3" stylesheets="@../Nyro/Bg.css">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="131.20001220703125" text="User ID" />
+                <TableColumn fx:id="emailColumn" prefWidth="416.79998779296875" text="Email" />
+            </columns>
+        </TableView>
+
+        <!-- Buttons -->
+        <HBox layoutX="264.0" layoutY="509.0" spacing="10.0">
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteUser" prefHeight="53.0" prefWidth="126.0" text="Delete User" />
+            <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefresh" prefHeight="56.0" prefWidth="134.0" text="Refresh" />
+        </HBox>
+
+        <!-- Logout Button -->
+        <Button fx:id="logoutButton" layoutX="695.0" layoutY="14.0" onAction="#handleLogout" prefHeight="48.0" prefWidth="80.0" text="Logout" />
+    </children>
+</AnchorPane>

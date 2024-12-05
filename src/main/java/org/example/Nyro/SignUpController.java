@@ -38,48 +38,25 @@ public class SignUpController {
         String password = signUpPass.getText();
         String confirmPassword = signUpPass1.getText();
 
-        if (!dbHandler.isValidEmail(email)) {
-            showAlert("Sign-Up Error", "Invalid email format.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        if (!dbHandler.doPasswordsMatch(password, confirmPassword)) {
-            showAlert("Sign-Up Error", "Passwords do not match.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        if (dbHandler.insertUser(email, password)) {
-            // Fetch the newly created user (e.g., by email)
-            User newUser = dbHandler.getUserByEmail(email);
-            if (newUser != null) {
-                // Set the session for the new user
+        try {
+            if (User.register(email, password, confirmPassword, dbHandler)) {
+                User newUser = dbHandler.getUserByEmail(email);
                 SessionManager.getInstance().setLoggedInUser(newUser);
-
-                // Redirect to the Personalized Feed
                 Stage currentStage = (Stage) signUpEmail.getScene().getWindow();
                 redirectToPersonalizedFeed(newUser, currentStage);
             } else {
-                showAlert("Sign-Up Error", "Unable to fetch user data. Please try logging in.", Alert.AlertType.ERROR);
+                throw new IllegalStateException("Unable to save user. Please try again.");
             }
-        } else {
-            showAlert("Sign-Up Failed", "Unable to save user. Please try again.", Alert.AlertType.ERROR);
-            clearFields();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            showAlert("Sign-Up Error", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
-
 
     private void showAlert(String title, String message, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
-    }
-
-    private void clearFields() {
-        signUpEmail.clear();
-        signUpPass.clear();
-        signUpPass1.clear();
     }
     @FXML
     public void login() {

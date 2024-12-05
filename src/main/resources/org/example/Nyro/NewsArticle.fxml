@@ -20,11 +20,10 @@
             <Font name="Open Sans Regular" size="54.0" />
          </font>
       </Text>
-      <ImageView fx:id="fav" fitHeight="50.0" fitWidth="50.0" layoutX="604.0" layoutY="14.0" pickOnBounds="true"
-                 preserveRatio="true">
-         <Image url="@../../../images/heart.png"/>
+      <ImageView fx:id="fav" fitHeight="50.0" fitWidth="50.0" layoutX="604.0" layoutY="14.0" onMouseClicked="#handleFavoriteClick" pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../../images/heart.png" />
       </ImageView>
-      <ImageView fx:id="dislike" fitHeight="50.0" fitWidth="50.0" layoutX="661.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="dislike" fitHeight="50.0" fitWidth="50.0" layoutX="661.0" layoutY="14.0" onMouseClicked="#handleDislikeClick" pickOnBounds="true" preserveRatio="true">
          <Image url="@../../../images/dislike.png" />
       </ImageView>
    </children>

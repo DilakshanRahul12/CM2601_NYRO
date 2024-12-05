@@ -1,6 +1,8 @@
 package org.example.db;
 
 import org.example.Nyro.*;
+import org.example.model.Admin;
+import org.example.service.ArticleCategorizer;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -11,9 +13,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- *
  *   Implement a demo database too/ import
- *
  */
 
 public class DatabaseHandler {
@@ -69,17 +69,6 @@ public class DatabaseHandler {
     public boolean isValidEmail(String email) {
         String emailRegex = "^[\\w-.]+@[\\w-]+\\.[a-zA-Z]{2,}$";
         return Pattern.matches(emailRegex, email);
-    }
-
-    /**
-     * Checks if the passwords match.
-     *
-     * @param password        The primary password.
-     * @param confirmPassword The confirmation password.
-     * @return true if the passwords match, false otherwise.
-     */
-    public boolean doPasswordsMatch(String password, String confirmPassword) {
-        return password.equals(confirmPassword);
     }
 
     /**
@@ -148,11 +137,7 @@ public class DatabaseHandler {
         return null;
     }
 
-
-
-
 // Article
-
 
     /**
      * Inserts a news article into the database.
@@ -212,20 +197,6 @@ public class DatabaseHandler {
 
         return articles;
     }
-
-    /**
-     * Retrieves a list of random articles from the cached articles.
-     *
-     * @param limit The number of random articles to fetch.
-     * @return List of random articles.
-     */
-    public List<Article> getRandomArticlesFromCache(int limit) {
-        List<Article> shuffledArticles = new ArrayList<>(cachedArticles);
-        Collections.shuffle(shuffledArticles); // Shuffle the list
-        return shuffledArticles.stream().limit(limit).collect(Collectors.toList());
-    }
-
-
     /**
      * Retrieves all articles from the database.
      */
@@ -257,8 +228,6 @@ public class DatabaseHandler {
 
             return articles;
         }
-
-
     /**
      * Categorizes uncategorized articles in the cached list.
      *
@@ -296,6 +265,30 @@ public class DatabaseHandler {
             return false;
         }
     }
+
+    /**
+     * Checks if an article title already exists in the database.
+     *
+     * @param title The title of the article.
+     * @return true if the title exists, false otherwise.
+     */
+    public boolean isTitleExists(String title) {
+        String query = "SELECT COUNT(*) FROM article WHERE title = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, title);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 
 // USER PREFERENCE
@@ -417,6 +410,206 @@ public class DatabaseHandler {
         }
         return null;
     }
+
+
+    // READ ARTICLE
+    public int getArticleIdByUrl(String url) {
+        String query = "SELECT id FROM article WHERE \"URL\" = ?"; // Replace 'articles' with your table name
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query))  {
+
+            stmt.setString(1, url);
+            ResultSet resultSet = stmt.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            } else {
+                System.out.println("No article found for the given URL.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Return -1 if no article is found
+    }
+
+
+    // USER MANAGEMENT ADMIN
+
+    /**
+     * Retrieves all users from the database.
+     *
+     * @return List of User objects representing all users in the database.
+     */
+    public List<User> getAllUsers() {
+        String query = "SELECT id, email, password FROM \"user\"";
+        List<User> users = new ArrayList<>();
+
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                users.add(new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                ));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    /**
+     * Deletes a user from the database by ID.
+     *
+     * @param userId The ID of the user to delete.
+     * @return true if the deletion was successful, false otherwise.
+     */
+    public boolean deleteUserById(int userId) {
+        String query = "DELETE FROM \"user\" WHERE id = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, userId);
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    // Profile
+
+    /**
+     * Retrieves a list of titles of favorite articles for a specific user.
+     *
+     * @param userId The ID of the user.
+     * @return List of titles of favorite articles.
+     */
+    public List<String> getFavoriteArticlesByUserId(int userId) {
+        String query = "SELECT a.title FROM favourites f " +
+                "JOIN article a ON f.article_id = a.id " +
+                "WHERE f.user_id = ?";
+        List<String> favoriteArticles = new ArrayList<>();
+
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    favoriteArticles.add(rs.getString("title"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return favoriteArticles;
+    }
+
+    /**
+     * Retrieves a list of titles of disliked articles for a specific user.
+     *
+     * @param userId The ID of the user.
+     * @return List of titles of disliked articles.
+     */
+    public List<String> getDislikedArticlesByUserId(int userId) {
+        String query = "SELECT a.title FROM dislikes d " +
+                "JOIN article a ON d.article_id = a.id " +
+                "WHERE d.user_id = ?";
+        List<String> dislikedArticles = new ArrayList<>();
+
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    dislikedArticles.add(rs.getString("title"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return dislikedArticles;
+    }
+
+    /**
+     * Validates the current password for a user.
+     *
+     * @param userId The ID of the user.
+     * @param currentPassword The current password to validate.
+     * @return true if the password is valid, false otherwise.
+     */
+    public boolean validatePassword(int userId, String currentPassword) {
+        String query = "SELECT 1 FROM \"user\" WHERE id = ? AND password = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, currentPassword);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // Return true if a record is found
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Updates the password for a user in the database.
+     *
+     * @param userId The ID of the user.
+     * @param newPassword The new password to set.
+     * @return true if the password was successfully updated, false otherwise.
+     */
+    public boolean updateUserPassword(int userId, String newPassword) {
+        String query = "UPDATE \"user\" SET password = ? WHERE id = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, newPassword);
+            stmt.setInt(2, userId);
+
+            return stmt.executeUpdate() > 0; // Return true if the update was successful
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    // ADMIN
+
+
+    public Admin authenticateAdmin(String email, String password) {
+        String query = "SELECT admin_id, email FROM admin WHERE email = ? AND password = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Admin(
+                            rs.getString("admin_id"),
+                            "Admin", // Admin name placeholder if not in table
+                            rs.getString("email")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Return null if authentication fails
+    }
+
 
 
 }
