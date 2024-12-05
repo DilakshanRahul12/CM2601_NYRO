@@ -27,10 +27,11 @@ public class RecommendationEngine {
         // Calculate category weights
         Map<String, Integer> categoryWeights = getCategoryWeights(userPreference);
 
-        // Filter, sort, and limit articles manually
+        // Filter out articles that are in the read history
+        Set<Integer> readArticleIds = userPreference.getRead().keySet();
         List<Article> filteredArticles = new ArrayList<>();
         for (Article article : allArticles) {
-            if (article.getCategory() != null) {
+            if (article.getCategory() != null && !readArticleIds.contains(article.getId())) {
                 filteredArticles.add(article);
             }
         }

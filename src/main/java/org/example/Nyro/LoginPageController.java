@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.example.db.DatabaseHandler;
 
+import org.example.model.Admin;
 import org.example.utility.SceneSwitcher;
 
 import java.io.IOException;
@@ -25,6 +26,9 @@ public class LoginPageController {
     @FXML
     private Button feed;
 
+    @FXML
+    private Button admin;
+
     private DatabaseHandler dbHandler;
 
 
@@ -38,27 +42,34 @@ public class LoginPageController {
         String email = signInEmail.getText();
         String password = signInPass.getText();
 
-        if (!dbHandler.isValidEmail(email)) {
-            showAlert("Sign-In Error", "Invalid email format.", Alert.AlertType.ERROR);
-            return;
-        }
+        try {
+            User authenticatedUser = User.authenticate(email, password, dbHandler);
 
-        User authenticatedUser = dbHandler.authenticateUser(email, password);
-        if (authenticatedUser != null) {
-            // Set the session for the authenticated user
+            // Set session and redirect
             SessionManager.getInstance().setLoggedInUser(authenticatedUser);
-
-            // Redirect to the Personalized Feed
             Stage currentStage = (Stage) signInEmail.getScene().getWindow();
-            NewsApiFetcher newsApiFetcher = new NewsApiFetcher();
-            //newsApiFetcher.fetchAndStoreNews();                               Enables News Fetching
             redirectToPersonalizedFeed(authenticatedUser, currentStage);
-        } else {
+        } catch (IllegalArgumentException e) {
+            showAlert("Sign-In Error", e.getMessage(), Alert.AlertType.ERROR);
+        } catch (NullPointerException e) {
             showAlert("Sign-In Failed", "Email or password is incorrect.", Alert.AlertType.ERROR);
         }
     }
+    @FXML
+    private void handleAdminLogin() {
+        String email = signInEmail.getText();
+        String password = signInPass.getText();
 
+        // Validate admin credentials
+        Admin authenticatedAdmin = dbHandler.authenticateAdmin(email, password);
 
+        Stage currentStage = (Stage) admin.getScene().getWindow();
+        if (authenticatedAdmin != null) { // Redirect to Admin Panel
+            redirectToAdmin(authenticatedAdmin,currentStage);
+        } else {
+            showAlert("Admin Login Failed", "Email or password is incorrect.", Alert.AlertType.ERROR);
+        }
+    }
     private void showAlert(String title, String content, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -104,13 +115,6 @@ public class LoginPageController {
         }
     }
 
-    @FXML
-    private void goToAdmin() {
-        // Get the current stage (window) and use popScene to switch to GeneralizedFeed.fxml
-        Stage stage = (Stage) feed.getScene().getWindow();
-        SceneSwitcher.popScene(stage,"org/example/app/AdminManageUser.fxml");
-    }
-
     private void redirectToPersonalizedFeed(User user, Stage stage) {
         try {
             URL resource = getClass().getResource("/org/example/Nyro/PersonalizedFeed.fxml");
@@ -127,6 +131,23 @@ public class LoginPageController {
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Error", "Failed to load Personalized Feed.", Alert.AlertType.ERROR);
+        }
+    }
+
+     private void redirectToAdmin(Admin admin,Stage stage) {
+        try {
+            URL resource = getClass().getResource("/org/example/Nyro/AdminManageUser.fxml");
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+
+            AdminManageUsersController controller = loader.getController();
+            controller.setAdmin(admin);
+
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load Admin Panel.", Alert.AlertType.ERROR);
         }
     }
 

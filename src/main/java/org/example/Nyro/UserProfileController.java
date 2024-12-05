@@ -116,4 +116,11 @@ public class UserProfileController {
         Stage stage = (Stage) logoutButton.getScene().getWindow();
         SceneSwitcher.switchScene(stage, "/org/example/app/GeneralizedFeed.fxml");
     }
+
+    @FXML
+    private void goBack() {
+        // Get the current stage (window) and use popScene to switch to GeneralizedFeed.fxml
+        Stage stage = (Stage) back.getScene().getWindow();
+        SceneSwitcher.popScene(stage,"org/example/Nyro/PersonalizedFeed.fxml");
+    }
 }

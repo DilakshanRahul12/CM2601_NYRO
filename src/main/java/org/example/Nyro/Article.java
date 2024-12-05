@@ -68,12 +68,6 @@
         }
     
         public String getImgURL() { return imgURL; }
-    
-        public List<String> getKeywords() {
-            return keywords;
-        }
-    
-    
         public int getId() {
             return id;
         }

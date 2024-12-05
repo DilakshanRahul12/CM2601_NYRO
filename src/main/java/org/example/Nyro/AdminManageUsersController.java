@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.example.db.DatabaseHandler;
+import org.example.model.Admin;
 import org.example.utility.SceneSwitcher;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class AdminManageUsersController {
 
     private ObservableList<UserTableEntry> userData = FXCollections.observableArrayList();
     private DatabaseHandler databaseHandler;
+    private Admin admin;
 
     @FXML
     private void initialize() {
@@ -52,6 +54,10 @@ public class AdminManageUsersController {
 
         // Load user data
         loadUserData();
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
     }
 
     private void loadUserData() {
@@ -72,24 +78,6 @@ public class AdminManageUsersController {
             showAlert("Error Loading Users", "An error occurred while fetching users from the database.");
         }
     }
-
-    @FXML
-    private void handleAddUser() {
-        System.out.println("Add User clicked!");
-        // Logic to add a new user
-    }
-
-    @FXML
-    private void handleEditUser() {
-        UserTableEntry selectedUser = userTable.getSelectionModel().getSelectedItem();
-        if (selectedUser != null) {
-            System.out.println("Edit User: " + selectedUser.getEmail());
-            // Logic to edit the selected user
-        } else {
-            showAlert("No User Selected", "Please select a user to edit.");
-        }
-    }
-
     @FXML
     private void handleDeleteUser() {
         UserTableEntry selectedUser = userTable.getSelectionModel().getSelectedItem();

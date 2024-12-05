@@ -31,6 +31,13 @@ public class FeedController {
 
     public void initialize() {
         DatabaseHandler dbHandler = new DatabaseHandler();
+        NewsApiFetcher newsApiFetcher = new NewsApiFetcher();
+
+        // Fetch and store new articles from the News API
+        newsApiFetcher.fetchAndStoreNews();
+
+        int updatedCount = dbHandler.categorizeCachedArticles();
+        System.out.println("Number of articles categorized: " + updatedCount);
 
         // Fetch 4 random articles for hot news
         List<Article> hotArticleList = dbHandler.getRandomArticles(4);

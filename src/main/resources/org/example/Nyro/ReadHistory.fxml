@@ -29,5 +29,10 @@
       <ImageView fx:id="profile" fitHeight="56.0" fitWidth="61.0" layoutX="718.0" layoutY="14.0" onMouseClicked="#goToProfile" pickOnBounds="true" preserveRatio="true">
           <Image url="@../../../images/Profile.png" />
       </ImageView>
+      <Text fill="WHITE" layoutX="276.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Read Histroy" wrappingWidth="318.80006408691406">
+         <font>
+            <Font name="Open Sans Regular" size="42.0" />
+         </font>
+      </Text>
    </children>
 </Pane>

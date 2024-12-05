@@ -1,6 +1,7 @@
 package org.example.db;
 
 import org.example.Nyro.*;
+import org.example.model.Admin;
 import org.example.service.ArticleCategorizer;
 
 import java.sql.*;
@@ -71,17 +72,6 @@ public class DatabaseHandler {
     }
 
     /**
-     * Checks if the passwords match.
-     *
-     * @param password        The primary password.
-     * @param confirmPassword The confirmation password.
-     * @return true if the passwords match, false otherwise.
-     */
-    public boolean doPasswordsMatch(String password, String confirmPassword) {
-        return password.equals(confirmPassword);
-    }
-
-    /**
      * Inserts a new user into the database.
      *
      * @param email    The user's email address.
@@ -147,11 +137,7 @@ public class DatabaseHandler {
         return null;
     }
 
-
-
-
 // Article
-
 
     /**
      * Inserts a news article into the database.
@@ -211,20 +197,6 @@ public class DatabaseHandler {
 
         return articles;
     }
-
-    /**
-     * Retrieves a list of random articles from the cached articles.
-     *
-     * @param limit The number of random articles to fetch.
-     * @return List of random articles.
-     */
-    public List<Article> getRandomArticlesFromCache(int limit) {
-        List<Article> shuffledArticles = new ArrayList<>(cachedArticles);
-        Collections.shuffle(shuffledArticles); // Shuffle the list
-        return shuffledArticles.stream().limit(limit).collect(Collectors.toList());
-    }
-
-
     /**
      * Retrieves all articles from the database.
      */
@@ -256,8 +228,6 @@ public class DatabaseHandler {
 
             return articles;
         }
-
-
     /**
      * Categorizes uncategorized articles in the cached list.
      *
@@ -612,6 +582,32 @@ public class DatabaseHandler {
             e.printStackTrace();
         }
         return false;
+    }
+
+
+    // ADMIN
+
+
+    public Admin authenticateAdmin(String email, String password) {
+        String query = "SELECT admin_id, email FROM admin WHERE email = ? AND password = ?";
+        try (Connection conn = connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Admin(
+                            rs.getString("admin_id"),
+                            "Admin", // Admin name placeholder if not in table
+                            rs.getString("email")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Return null if authentication fails
     }
 
 
