@@ -579,7 +579,7 @@ public class DatabaseHandler {
     // ADMIN
 
     public Admin authenticateAdmin(String email, String password) {
-        String query = "SELECT admin_id, email FROM admin WHERE email = ? AND password = ?";
+        String query = "SELECT email, password FROM admin WHERE email = ? AND password = ?";
         try (Connection conn = connect();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, email);
@@ -588,9 +588,8 @@ public class DatabaseHandler {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return new Admin(
-                            rs.getString("admin_id"),
-                            "Admin", // Admin name placeholder if not in table
-                            rs.getString("email")
+                            rs.getString("email"),
+                            rs.getString("password")
                     );
                 }
             }
